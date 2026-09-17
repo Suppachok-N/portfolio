@@ -194,49 +194,8 @@
       transition: transform 0.3s ease;
     }
 
-    .gallery-item:hover img,
-    .gallery-item.show-actions img {
+    .gallery-item:hover img {
       transform: scale(1.03);
-    }
-
-    .overlay-actions {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      z-index: 2;
-    }
-
-    .gallery-item:hover .overlay-actions,
-    .gallery-item:focus-within .overlay-actions,
-    .gallery-item.show-actions .overlay-actions {
-      opacity: 1;
-    }
-
-    .action-btn {
-      padding: 8px 14px;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--accent-color);
-      background-color: var(--card-bg);
-      border: 1px solid var(--accent-color);
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .action-btn:hover {
-      background-color: var(--accent-color);
-      color: var(--bg-color);
-      transform: scale(1.05);
     }
 
     .play-icon {
@@ -292,77 +251,18 @@
       transform: translateY(-2px);
     }
 
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      transition: background-color 0.35s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .modal-overlay.active {
-      display: flex;
-      background-color: rgba(0, 0, 0, 0.9);
-    }
-
-    .animated-modal-element {
-      position: fixed;
-      z-index: 1001;
-      object-fit: contain;
-      border-radius: 8px;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 12px 36px rgba(0,0,0,0.8);
-      transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
-    }
-
-    .btn-close {
-      position: fixed;
-      z-index: 1002;
-      width: 38px;
-      height: 38px;
-      background-color: var(--card-bg);
-      color: var(--accent-color);
-      border: 1px solid var(--accent-color);
-      border-radius: 50%;
-      font-size: 22px;
-      font-weight: bold;
-      line-height: 32px;
-      text-align: center;
-      cursor: pointer;
-      user-select: none;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease, background-color 0.2s, transform 0.2s;
-    }
-
-    .btn-close.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .btn-close:hover {
-      background-color: var(--accent-color);
-      color: var(--bg-color);
-      transform: scale(1.1);
-    }
-
     .detail-modal-overlay {
       display: none;
       position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.8);
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.95);
       z-index: 2000;
       justify-content: center;
       align-items: center;
+      padding: 0;
     }
 
     .detail-modal-overlay.active {
@@ -371,12 +271,13 @@
 
     .detail-card {
       background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      width: 90%;
-      max-width: 550px;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+      border: none;
+      width: 100vw;
+      height: 100vh;
+      max-width: none;
+      max-height: none;
+      border-radius: 0;
+      overflow-y: auto;
       position: relative;
       display: flex;
       flex-direction: column;
@@ -389,21 +290,21 @@
     }
 
     .detail-btn-close {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      width: 32px;
-      height: 32px;
-      background-color: var(--card-bg);
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 44px;
+      height: 44px;
+      background-color: rgba(0, 0, 0, 0.6);
       color: var(--accent-color);
       border: 1px solid var(--accent-color);
       border-radius: 50%;
-      font-size: 18px;
+      font-size: 24px;
       cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 10;
+      z-index: 2010;
       transition: all 0.2s;
     }
 
@@ -414,7 +315,8 @@
 
     .detail-media-container {
       width: 100%;
-      max-height: 250px;
+      flex: 1;
+      min-height: 60vh;
       background-color: #000;
       display: flex;
       justify-content: center;
@@ -425,51 +327,59 @@
 
     .detail-media-container img {
       max-width: 100%;
-      max-height: 250px;
+      max-height: 75vh;
       object-fit: contain;
     }
 
     .detail-media-container iframe {
       width: 100%;
-      height: 250px;
+      height: 100%;
+      min-height: 60vh;
       border: none;
     }
 
     .detail-content {
-      padding: 20px;
+      padding: 30px;
+      max-width: 1000px;
+      width: 100%;
+      margin: 0 auto;
     }
 
     .detail-content h3 {
-      margin-bottom: 8px;
+      font-size: 24px;
+      margin-bottom: 12px;
       color: var(--text-primary);
     }
 
     .detail-tags {
       display: flex;
-      gap: 6px;
+      gap: 8px;
       flex-wrap: wrap;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
     .tag-badge {
-      font-size: 12px;
+      font-size: 13px;
       background-color: rgba(56, 189, 248, 0.1);
       color: var(--accent-color);
       border: 1px solid var(--accent-color);
-      padding: 3px 8px;
+      padding: 4px 12px;
       border-radius: 12px;
     }
 
     .detail-content p {
       color: var(--text-secondary);
-      font-size: 14px;
-      line-height: 1.6;
+      font-size: 16px;
+      line-height: 1.8;
       white-space: pre-line;
     }
 
     @media (max-width: 768px) {
       .gallery-container {
         column-count: 2;
+      }
+      .detail-content {
+        padding: 20px;
       }
     }
 
@@ -483,9 +393,8 @@
         margin-bottom: 10px;
       }
 
-      .action-btn {
-        padding: 6px 10px;
-        font-size: 12px;
+      .detail-media-container iframe {
+        min-height: 40vh;
       }
     }
   </style>
@@ -534,10 +443,7 @@
     <button class="btn-add" id="btnAdd" onclick="addMoreItems()">โหลดเพิ่ม</button>
   </div>
 
-  <div class="modal-overlay" id="mediaModal" onclick="closeModal()"></div>
-  <button class="btn-close" id="btnClose" onclick="closeModal()">&times;</button>
-
-  <div class="detail-modal-overlay" id="detailModal">
+  <div class="detail-modal-overlay" id="detailModal" onclick="handleModalClick(event)">
     <div class="detail-card">
       <button class="detail-btn-close" onclick="closeDetailModal()">&times;</button>
       <div class="detail-media-container" id="detailMediaBox"></div>
@@ -551,8 +457,6 @@
 
   <script>
     const gallery = document.getElementById('gallery');
-    const modal = document.getElementById('mediaModal');
-    const btnClose = document.getElementById('btnClose');
     const btnAdd = document.getElementById('btnAdd');
 
     const detailModal = document.getElementById('detailModal');
@@ -569,21 +473,7 @@
       navigator.clipboard.writeText('suppachoknuthep@gmail.com').then(() => toast.classList.add('show'));
     });
 
-    document.addEventListener('click', (e) => {
-      toast.classList.remove('show');
-
-      if (!e.target.closest('.gallery-item')) {
-        document.querySelectorAll('.gallery-item.show-actions').forEach(item => {
-          item.classList.remove('show-actions');
-        });
-      }
-    });
-
-    let activeItem = null;
-    let activeThumb = null;
-    let activeMediaData = null;
-    let animatedEl = null;
-    let isAnimating = false;
+    document.addEventListener('click', () => toast.classList.remove('show'));
     
     let currentMainTag = 'all';
     let currentSubTag = 'all_image';
@@ -703,120 +593,12 @@
       currentPool = shuffleArray([...filtered]);
     }
 
-    function updateModalLayout() {
-      if (!animatedEl || !activeThumb || !activeMediaData) return;
-
-      const maxW = window.innerWidth * 0.9;
-      const maxH = window.innerHeight * 0.9;
-      
-      let imgRatio;
-      if (activeMediaData.type === 'youtube') {
-        imgRatio = 16 / 9;
-      } else {
-        imgRatio = animatedEl.naturalWidth && animatedEl.naturalHeight 
-          ? animatedEl.naturalWidth / animatedEl.naturalHeight 
-          : activeThumb.getBoundingClientRect().width / activeThumb.getBoundingClientRect().height;
-      }
-
-      let targetW = maxW;
-      let targetH = targetW / imgRatio;
-
-      if (targetH > maxH) {
-        targetH = maxH;
-        targetW = targetH * imgRatio;
-      }
-
-      const targetLeft = (window.innerWidth - targetW) / 2;
-      const targetTop = (window.innerHeight - targetH) / 2;
-
-      animatedEl.style.top = `${targetTop}px`;
-      animatedEl.style.left = `${targetLeft}px`;
-      animatedEl.style.width = `${targetW}px`;
-      animatedEl.style.height = `${targetH}px`;
-
-      btnClose.style.top = `${targetTop + 10}px`;
-      btnClose.style.left = `${targetLeft + targetW - 48}px`;
-    }
-
-    function openModal(item, thumbImg, mediaData) {
-      if (isAnimating) return;
-      isAnimating = true;
-
-      activeItem = item;
-      activeThumb = thumbImg;
-      activeMediaData = mediaData;
-
-      const rect = thumbImg.getBoundingClientRect();
-
-      if (mediaData.type === 'youtube') {
-        animatedEl = document.createElement('iframe');
-        animatedEl.src = `https://www.youtube.com/embed/${mediaData.id}?autoplay=1`;
-        animatedEl.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
-        animatedEl.allowFullscreen = true;
-      } else {
-        animatedEl = document.createElement('img');
-        animatedEl.src = mediaData.url;
-      }
-
-      animatedEl.className = 'animated-modal-element';
-      animatedEl.style.top = `${rect.top}px`;
-      animatedEl.style.left = `${rect.left}px`;
-      animatedEl.style.width = `${rect.width}px`;
-      animatedEl.style.height = `${rect.height}px`;
-
-      document.body.appendChild(animatedEl);
-      thumbImg.style.visibility = 'hidden';
-
-      modal.style.display = 'flex';
-      requestAnimationFrame(() => {
-        modal.classList.add('active');
-      });
-
-      requestAnimationFrame(() => {
-        updateModalLayout();
-      });
-
-      setTimeout(() => {
-        btnClose.classList.add('show');
-        isAnimating = false;
-      }, 350);
-    }
-
-    function closeModal() {
-      if (isAnimating || !animatedEl) return;
-      isAnimating = true;
-
-      btnClose.classList.remove('show');
-      modal.classList.remove('active');
-
-      const rect = activeThumb.getBoundingClientRect();
-
-      animatedEl.style.top = `${rect.top}px`;
-      animatedEl.style.left = `${rect.left}px`;
-      animatedEl.style.width = `${rect.width}px`;
-      animatedEl.style.height = `${rect.height}px`;
-
-      setTimeout(() => {
-        if (animatedEl) {
-          animatedEl.remove();
-          animatedEl = null;
-        }
-        if (activeThumb) {
-          activeThumb.style.visibility = 'visible';
-        }
-        modal.style.display = 'none';
-        activeItem = null;
-        activeThumb = null;
-        activeMediaData = null;
-        isAnimating = false;
-      }, 350);
-    }
-
     function openDetailModal(mediaData) {
       detailMediaBox.innerHTML = '';
       if (mediaData.type === 'youtube') {
         const iframe = document.createElement('iframe');
-        iframe.src = `https://www.youtube.com/embed/${mediaData.id}`;
+        iframe.src = `https://www.youtube.com/embed/${mediaData.id}?autoplay=1`;
+        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
         iframe.allowFullscreen = true;
         detailMediaBox.appendChild(iframe);
       } else {
@@ -846,11 +628,19 @@
       detailDescription.textContent = mediaData.desc || 'ไม่มีข้อมูลรายละเอียดเพิ่มเติม';
 
       detailModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
     }
 
     function closeDetailModal() {
       detailModal.classList.remove('active');
       detailMediaBox.innerHTML = '';
+      document.body.style.overflow = '';
+    }
+
+    function handleModalClick(e) {
+      if (e.target === detailModal) {
+        closeDetailModal();
+      }
     }
 
     function createGalleryItem(mediaData) {
@@ -874,46 +664,9 @@
 
       item.appendChild(img);
 
-      const overlay = document.createElement('div');
-      overlay.className = 'overlay-actions';
-
-      const btnExpand = document.createElement('button');
-      btnExpand.className = 'action-btn btn-expand-item';
-      btnExpand.textContent = 'ขยาย';
-      btnExpand.onclick = (e) => {
-        e.stopPropagation();
-        openModal(item, img, mediaData);
-      };
-
-      const btnDetail = document.createElement('button');
-      btnDetail.className = 'action-btn btn-detail-item';
-      btnDetail.textContent = 'รายละเอียด';
-      btnDetail.onclick = (e) => {
-        e.stopPropagation();
+      item.onclick = () => {
         openDetailModal(mediaData);
       };
-
-      overlay.appendChild(btnExpand);
-      overlay.appendChild(btnDetail);
-      item.appendChild(overlay);
-
-      item.addEventListener('click', (e) => {
-        if (e.target.closest('.action-btn')) return;
-
-        const isAlreadyShowing = item.classList.contains('show-actions');
-
-        document.querySelectorAll('.gallery-item.show-actions').forEach(otherItem => {
-          if (otherItem !== item) {
-            otherItem.classList.remove('show-actions');
-          }
-        });
-
-        if (!isAlreadyShowing) {
-          item.classList.add('show-actions');
-        } else {
-          item.classList.remove('show-actions');
-        }
-      });
 
       return item;
     }
@@ -939,15 +692,8 @@
       }
     }
 
-    window.addEventListener('resize', () => {
-      if (modal.classList.contains('active')) {
-        updateModalLayout();
-      }
-    });
-
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
-        if (modal.classList.contains('active')) closeModal();
         if (detailModal.classList.contains('active')) closeDetailModal();
       }
     });
