@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --bg-color: #000000;
+      --card-bg: #111111;
+      --accent-color: #38bdf8;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --border-color: #222222;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Noto Sans Thai', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-primary);
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .toast {
+      position: fixed;
+      top: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--accent-color);
+      color: var(--bg-color);
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+      transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 1000;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toast.show {
+      top: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 20px 0 10px;
+      color: var(--text-primary);
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+    }
+
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: rgba(56, 189, 248, 0.1);
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
+      font-size: 1.1rem;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .social-btn:hover {
+      background-color: var(--accent-color);
+      color: var(--bg-color);
+    }
+
+    .filter-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .filter-menu, .sub-filter-menu {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .sub-filter-menu {
+      display: none;
+      padding: 8px 16px;
+      background-color: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 25px;
+    }
+
+    .sub-filter-menu.active {
+      display: flex;
+    }
+
+    .filter-btn {
+      padding: 8px 18px;
+      font-size: 15px;
+      font-weight: 600;
+      background-color: transparent;
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover {
+      background-color: var(--accent-color);
+      color: var(--bg-color);
+    }
+
+    .filter-btn.active {
+      background-color: var(--accent-color);
+      color: var(--bg-color);
+      border-color: var(--accent-color);
+    }
+
+    .sub-filter-btn {
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      background-color: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .sub-filter-btn:hover {
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+    }
+
+    .sub-filter-btn.active {
+      background-color: rgba(56, 189, 248, 0.1);
+      color: var(--accent-color);
+      border-color: var(--accent-color);
+    }
+
+    .gallery-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      column-count: 3;
+      column-gap: 15px;
+    }
+
+    .gallery-item {
+      break-inside: avoid;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      overflow: hidden;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+      position: relative;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.03);
+    }
+
+    .overlay-actions {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 2;
+    }
+
+    .gallery-item:hover .overlay-actions,
+    .gallery-item:focus-within .overlay-actions {
+      opacity: 1;
+    }
+
+    .action-btn {
+      padding: 8px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent-color);
+      background-color: var(--card-bg);
+      border: 1px solid var(--accent-color);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .action-btn:hover {
+      background-color: var(--accent-color);
+      color: var(--bg-color);
+      transform: scale(1.05);
+    }
+
+    .play-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 48px;
+      height: 48px;
+      background-color: rgba(0, 0, 0, 0.6);
+      border: 2px solid var(--accent-color);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      pointer-events: none;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+      z-index: 1;
+    }
+
+    .play-icon::after {
+      content: "";
+      display: block;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 8px 0 8px 14px;
+      border-color: transparent transparent transparent var(--accent-color);
+      margin-left: 3px;
+    }
+
+    .btn-container {
+      text-align: center;
+      margin: 40px 0;
+    }
+
+    .btn-add {
+      padding: 12px 28px;
+      font-size: 16px;
+      background-color: transparent;
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .btn-add:hover {
+      background-color: var(--accent-color);
+      color: var(--bg-color);
+      transform: translateY(-2px);
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      transition: background-color 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    .animated-modal-element {
+      position: fixed;
+      z-index: 1001;
+      object-fit: contain;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 12px 36px rgba(0,0,0,0.8);
+      transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    .btn-close {
+      position: fixed;
+      z-index: 1002;
+      width: 38px;
+      height: 38px;
+      background-color: var(--card-bg);
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
+      border-radius: 50%;
+      font-size: 22px;
+      font-weight: bold;
+      line-height: 32px;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, background-color 0.2s, transform 0.2s;
+    }
+
+    .btn-close.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .btn-close:hover {
+      background-color: var(--accent-color);
+      color: var(--bg-color);
+      transform: scale(1.1);
+    }
+
+    .detail-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .detail-modal-overlay.active {
+      display: flex;
+    }
+
+    .detail-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      width: 90%;
+      max-width: 550px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .detail-btn-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 32px;
+      height: 32px;
+      background-color: var(--card-bg);
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+      transition: all 0.2s;
+    }
+
+    .detail-btn-close:hover {
+      background-color: var(--accent-color);
+      color: var(--bg-color);
+    }
+
+    .detail-media-container {
+      width: 100%;
+      max-height: 250px;
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .detail-media-container img {
+      max-width: 100%;
+      max-height: 250px;
+      object-fit: contain;
+    }
+
+    .detail-media-container iframe {
+      width: 100%;
+      height: 250px;
+      border: none;
+    }
+
+    .detail-content {
+      padding: 20px;
+    }
+
+    .detail-content h3 {
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    .detail-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .tag-badge {
+      font-size: 12px;
+      background-color: rgba(56, 189, 248, 0.1);
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
+      padding: 3px 8px;
+      border-radius: 12px;
+    }
+
+    .detail-content p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+
+    @media (max-width: 768px) {
+      .gallery-container {
+        column-count: 2;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .gallery-container {
+        column-count: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="toast" class="toast">
+    <i class="fa-solid fa-check"></i> ก๊อปปี้อีเมลแล้ว
+  </div>
+
+  <h1>Coke.Chok's Portfolio</h1>
+
+  <div class="social-icons">
+    <button id="emailBtn" class="social-btn" title="Email">
+      <i class="fa-regular fa-envelope"></i>
+    </button>
+    <a href="https://www.facebook.com/coke.chok/" target="_blank" class="social-btn" title="Facebook">
+      <i class="fa-brands fa-facebook-f"></i>
+    </a>
+    <a href="https://www.instagram.com/coke.chok/" target="_blank" class="social-btn" title="Instagram">
+      <i class="fa-brands fa-instagram"></i>
+    </a>
+    <a href="https://x.com/coke_chok" target="_blank" class="social-btn" title="X (Twitter)">
+      <i class="fa-brands fa-x-twitter"></i>
+    </a>
+  </div>
+
+  <div class="filter-section">
+    <div class="filter-menu">
+      <button class="filter-btn active" onclick="filterMainCategory('all', this)">ทั้งหมด</button>
+      <button class="filter-btn" onclick="filterMainCategory('image', this)">งานภาพ</button>
+      <button class="filter-btn" onclick="filterMainCategory('audio', this)">งานเสียง</button>
+    </div>
+
+    <div class="sub-filter-menu" id="imageSubFilter">
+      <button class="sub-filter-btn active" onclick="filterSubCategory('all_image', this)">งานภาพทั้งหมด</button>
+      <button class="sub-filter-btn" onclick="filterSubCategory('illustration', this)">ภาพประกอบ</button>
+      <button class="sub-filter-btn" onclick="filterSubCategory('graphic', this)">กราฟิก</button>
+      <button class="sub-filter-btn" onclick="filterSubCategory('2d_animate', this)">2D Animate</button>
+    </div>
+  </div>
+
+  <div class="gallery-container" id="gallery"></div>
+
+  <div class="btn-container">
+    <button class="btn-add" id="btnAdd" onclick="addMoreItems()">โหลดเพิ่ม</button>
+  </div>
+
+  <div class="modal-overlay" id="mediaModal" onclick="closeModal()"></div>
+  <button class="btn-close" id="btnClose" onclick="closeModal()">&times;</button>
+
+  <div class="detail-modal-overlay" id="detailModal">
+    <div class="detail-card">
+      <button class="detail-btn-close" onclick="closeDetailModal()">&times;</button>
+      <div class="detail-media-container" id="detailMediaBox"></div>
+      <div class="detail-content">
+        <h3 id="detailTitle">รายละเอียดเนื้อหา</h3>
+        <div class="detail-tags" id="detailTags"></div>
+        <p id="detailDescription">ข้อมูลของสื่อ รายละเอียดสเปก หรือคำอธิบายเพิ่มเติมเกี่ยวกับผลงานชิ้นนี้</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const gallery = document.getElementById('gallery');
+    const modal = document.getElementById('mediaModal');
+    const btnClose = document.getElementById('btnClose');
+    const btnAdd = document.getElementById('btnAdd');
+
+    const detailModal = document.getElementById('detailModal');
+    const detailMediaBox = document.getElementById('detailMediaBox');
+    const detailTitle = document.getElementById('detailTitle');
+    const detailTags = document.getElementById('detailTags');
+    const detailDescription = document.getElementById('detailDescription');
+    const imageSubFilter = document.getElementById('imageSubFilter');
+
+    const toast = document.getElementById('toast');
+
+    document.getElementById('emailBtn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      navigator.clipboard.writeText('suppachoknuthep@gmail.com').then(() => toast.classList.add('show'));
+    });
+
+    document.addEventListener('click', () => toast.classList.remove('show'));
+
+    let activeItem = null;
+    let activeThumb = null;
+    let activeMediaData = null;
+    let animatedEl = null;
+    let isAnimating = false;
+    
+    let currentMainTag = 'all';
+    let currentSubTag = 'all_image';
+
+    const myMedia = [
+      { tags: ['audio'], type: 'youtube', id: 'prE-CU5Ruqs', title: 'GOPGAP', desc: `• ทำเสียงทั้งหมด จบงานเป็น .wav ไฟล์เดียวที่เอาไปรวมกับงานภาพได้เลย
+    • เสียง FX, Foley, บรรยากาศ เกือบทั้งหมดนำมาจาก 3rd Party
+    • ซอฟต์แวร์ที่ใช้: Ableton Live` },
+      { tags: ['audio'], type: 'youtube', id: '6YZIQ8rhybQ', title: 'A Daily Disaster', desc: `• ทำเสียงทั้งหมด จบงานเป็น .wav ไฟล์เดียวที่เอาไปรวมกับงานภาพได้เลย
+    • เสียง FX, Foley, บรรยากาศ เกือบทั้งหมดนำมาจาก 3rd Party
+    • กำกับพากย์เอง
+    • ซอฟต์แวร์ที่ใช้: Ableton Live` },
+      { tags: ['audio'], type: 'youtube', id: '2MLnYi3CVW4', title: 'A Daily Disaster', desc: `• ทำเสียงทั้งหมด จบงานเป็น .wav ไฟล์เดียวที่เอาไปรวมกับงานภาพได้เลย
+    • เสียง FX, Foley, บรรยากาศ เกือบทั้งหมดนำมาจาก 3rd Party
+    • กำกับพากย์เอง
+    • ซอฟต์แวร์ที่ใช้: Ableton Live` },
+     { tags: ['2d_animate'], type: 'youtube', id: '3WiSuG1dFGw', title: 'ส่วนหนึ่งของ Interrogator', desc: `• งานตำแหน่ง 2D Animator ที่ M2 Animation Studio Co., Ltd.
+    • ส่วนที่รับผิดชอบ: การเคลื่อนไหวของตัวละคร
+    • ซอฟต์แวร์ที่ใช้: Toon Boom Harmony` },
+     { tags: ['2d_animate'], type: 'youtube', id: 'x7kNhP0kfys', title: 'ส่วนหนึ่งของ ちみも (Chimimo)', desc: `• งานตำแหน่ง 2D Animator ที่ M2 Animation Studio Co., Ltd.
+    • ส่วนที่รับผิดชอบ: การเคลื่อนไหวของตัวละคร
+    • ซอฟต์แวร์ที่ใช้: Toon Boom Harmony` },
+      { tags: ['2d_animate'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Anim-Gunfight.gif?raw=true', title: 'Gunfight', desc: `• ทำทั้งหมด ไม่ใช้ AI
+    • ซอฟต์แวร์ที่ใช้: Toon Boom Harmony` },
+      { tags: ['2d_animate'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Anim-L_Run.gif?raw=true', title: 'Run cycle', desc: `• ทำทั้งหมด ไม่ใช้ AI
+    • ซอฟต์แวร์ที่ใช้: Toon Boom Harmony` },
+      { tags: ['2d_animate'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Anim-Transform.gif?raw=true', title: 'Transform', desc: `• ทำทั้งหมด ไม่ใช้ AI
+    • ซอฟต์แวร์ที่ใช้: Toon Boom Harmony` },
+      { tags: ['graphic'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Graph-Alert_HUD.jpg?raw=true', title: 'HUD interface', desc: `• ทำทั้งหมด ไม่ใช้ AI
+    • ซอฟต์แวร์ที่ใช้: Inkscape, Davinci Resole` },
+      { tags: ['graphic'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Graph-Maneki_Neko.jpg?raw=true', title: 'Maneki Neko', desc: `• ทำทั้งหมด ไม่ใช้ AI
+    • ซอฟต์แวร์ที่ใช้: Inkscape` },
+      { tags: ['graphic'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Graph-Sustainable_Icon.jpg?raw=true', title: 'Sustainable icon set', desc: `• ทำทั้งหมด ไม่ใช้ AI
+    • ซอฟต์แวร์ที่ใช้: Inkscape` },
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-Base.png?raw=true', title: 'Outer base', desc: `• ทำทั้งหมด ไม่ใช้ AI
+    • ซอฟต์แวร์ที่ใช้: Clip Studio Paint` },
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L-Captain.png?raw=true', title: 'Captain', desc: `• ทำทั้งหมด ไม่ใช้ AI
+    • ซอฟต์แวร์ที่ใช้: Clip Studio Paint` },
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L-F-Operation.png?raw=true', title: 'Operation', desc: `• ทำทั้งหมด ไม่ใช้ AI
+    • ซอฟต์แวร์ที่ใช้: Clip Studio Paint` },
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L-K-Fight.png?raw=true', title: 'Fight', desc: `• ทำทั้งหมด ไม่ใช้ AI
+    • ซอฟต์แวร์ที่ใช้: Clip Studio Paint` },
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L-Singing.png?raw=true', title: 'Singing', desc: `• ทำทั้งหมด ไม่ใช้ AI
+    • ซอฟต์แวร์ที่ใช้: Clip Studio Paint` },
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L_M_Action.png?raw=true', title: 'Action', desc: `• ทำทั้งหมด ไม่ใช้ AI
+    • ซอฟต์แวร์ที่ใช้: Clip Studio Paint` },
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L_Operator.png?raw=true', title: 'Operator', desc: `• ทำทั้งหมด ไม่ใช้ AI
+    • ซอฟต์แวร์ที่ใช้: Clip Studio Paint` },
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-Natsuki.png?raw=true', title: 'Natsuki', desc: `• ทำทั้งหมด ไม่ใช้ AI
+    • ซอฟต์แวร์ที่ใช้: Clip Studio Paint` },
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-Norigo.png?raw=true', title: 'Norigo', desc: `• ทำทั้งหมด ไม่ใช้ AI
+    • ซอฟต์แวร์ที่ใช้: Clip Studio Paint` },
+    ];
+
+    let currentPool = [];
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function filterMainCategory(selectedTag, btnElement) {
+      currentMainTag = selectedTag;
+      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      btnElement.classList.add('active');
+
+      if (selectedTag === 'image') {
+        imageSubFilter.classList.add('active');
+        currentSubTag = 'all_image';
+        resetSubFilterButtons();
+      } else {
+        imageSubFilter.classList.remove('active');
+      }
+
+      refreshGallery();
+    }
+
+    function filterSubCategory(subTag, btnElement) {
+      currentSubTag = subTag;
+      document.querySelectorAll('.sub-filter-btn').forEach(btn => btn.classList.remove('active'));
+      btnElement.classList.add('active');
+
+      refreshGallery();
+    }
+
+    function resetSubFilterButtons() {
+      const subBtns = document.querySelectorAll('.sub-filter-btn');
+      subBtns.forEach(btn => btn.classList.remove('active'));
+      if (subBtns.length > 0) subBtns[0].classList.add('active');
+    }
+
+    function refreshGallery() {
+      gallery.innerHTML = '';
+      generateMoreItems();
+      addMoreItems();
+    }
+
+    function generateMoreItems() {
+      let filtered = [];
+
+      if (currentMainTag === 'all') {
+        filtered = myMedia;
+      } else if (currentMainTag === 'audio') {
+        filtered = myMedia.filter(item => item.tags && item.tags.includes('audio'));
+      } else if (currentMainTag === 'image') {
+        const imageTags = ['illustration', 'graphic', '2d_animate'];
+        if (currentSubTag === 'all_image') {
+          filtered = myMedia.filter(item => item.tags && item.tags.some(t => imageTags.includes(t)));
+        } else {
+          filtered = myMedia.filter(item => item.tags && item.tags.includes(currentSubTag));
+        }
+      }
+      
+      currentPool = shuffleArray([...filtered]);
+    }
+
+    function updateModalLayout() {
+      if (!animatedEl || !activeThumb || !activeMediaData) return;
+
+      const maxW = window.innerWidth * 0.9;
+      const maxH = window.innerHeight * 0.9;
+      
+      let imgRatio;
+      if (activeMediaData.type === 'youtube') {
+        imgRatio = 16 / 9;
+      } else {
+        imgRatio = animatedEl.naturalWidth && animatedEl.naturalHeight 
+          ? animatedEl.naturalWidth / animatedEl.naturalHeight 
+          : activeThumb.getBoundingClientRect().width / activeThumb.getBoundingClientRect().height;
+      }
+
+      let targetW = maxW;
+      let targetH = targetW / imgRatio;
+
+      if (targetH > maxH) {
+        targetH = maxH;
+        targetW = targetH * imgRatio;
+      }
+
+      const targetLeft = (window.innerWidth - targetW) / 2;
+      const targetTop = (window.innerHeight - targetH) / 2;
+
+      animatedEl.style.top = `${targetTop}px`;
+      animatedEl.style.left = `${targetLeft}px`;
+      animatedEl.style.width = `${targetW}px`;
+      animatedEl.style.height = `${targetH}px`;
+
+      btnClose.style.top = `${targetTop + 10}px`;
+      btnClose.style.left = `${targetLeft + targetW - 48}px`;
+    }
+
+    function openModal(item, thumbImg, mediaData) {
+      if (isAnimating) return;
+      isAnimating = true;
+
+      activeItem = item;
+      activeThumb = thumbImg;
+      activeMediaData = mediaData;
+
+      const rect = thumbImg.getBoundingClientRect();
+
+      if (mediaData.type === 'youtube') {
+        animatedEl = document.createElement('iframe');
+        animatedEl.src = `https://www.youtube.com/embed/${mediaData.id}?autoplay=1`;
+        animatedEl.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+        animatedEl.allowFullscreen = true;
+      } else {
+        animatedEl = document.createElement('img');
+        animatedEl.src = mediaData.url;
+      }
+
+      animatedEl.className = 'animated-modal-element';
+      animatedEl.style.top = `${rect.top}px`;
+      animatedEl.style.left = `${rect.left}px`;
+      animatedEl.style.width = `${rect.width}px`;
+      animatedEl.style.height = `${rect.height}px`;
+
+      document.body.appendChild(animatedEl);
+      thumbImg.style.visibility = 'hidden';
+
+      modal.style.display = 'flex';
+      requestAnimationFrame(() => {
+        modal.classList.add('active');
+      });
+
+      requestAnimationFrame(() => {
+        updateModalLayout();
+      });
+
+      setTimeout(() => {
+        btnClose.classList.add('show');
+        isAnimating = false;
+      }, 350);
+    }
+
+    function closeModal() {
+      if (isAnimating || !animatedEl) return;
+      isAnimating = true;
+
+      btnClose.classList.remove('show');
+      modal.classList.remove('active');
+
+      const rect = activeThumb.getBoundingClientRect();
+
+      animatedEl.style.top = `${rect.top}px`;
+      animatedEl.style.left = `${rect.left}px`;
+      animatedEl.style.width = `${rect.width}px`;
+      animatedEl.style.height = `${rect.height}px`;
+
+      setTimeout(() => {
+        if (animatedEl) {
+          animatedEl.remove();
+          animatedEl = null;
+        }
+        if (activeThumb) {
+          activeThumb.style.visibility = 'visible';
+        }
+        modal.style.display = 'none';
+        activeItem = null;
+        activeThumb = null;
+        activeMediaData = null;
+        isAnimating = false;
+      }, 350);
+    }
+
+    function openDetailModal(mediaData) {
+      detailMediaBox.innerHTML = '';
+      if (mediaData.type === 'youtube') {
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube.com/embed/${mediaData.id}`;
+        iframe.allowFullscreen = true;
+        detailMediaBox.appendChild(iframe);
+      } else {
+        const img = document.createElement('img');
+        img.src = mediaData.url;
+        detailMediaBox.appendChild(img);
+      }
+
+      detailTitle.textContent = mediaData.title || 'รายละเอียดสื่อ';
+      
+      detailTags.innerHTML = '';
+      if (mediaData.tags && mediaData.tags.length > 0) {
+        const tagMap = { 
+          illustration: 'ภาพประกอบ', 
+          graphic: 'กราฟิก', 
+          '2d_animate': '2D Animate', 
+          audio: 'งานเสียง' 
+        };
+        mediaData.tags.forEach(t => {
+          const span = document.createElement('span');
+          span.className = 'tag-badge';
+          span.textContent = tagMap[t] || t;
+          detailTags.appendChild(span);
+        });
+      }
+
+      detailDescription.textContent = mediaData.desc || 'ไม่มีข้อมูลรายละเอียดเพิ่มเติม';
+
+      detailModal.classList.add('active');
+    }
+
+    function closeDetailModal() {
+      detailModal.classList.remove('active');
+      detailMediaBox.innerHTML = '';
+    }
+
+    function createGalleryItem(mediaData) {
+      const item = document.createElement('div');
+      item.className = 'gallery-item';
+
+      const img = document.createElement('img');
+      img.loading = 'lazy';
+
+      if (mediaData.type === 'youtube') {
+        img.src = `https://img.youtube.com/vi/${mediaData.id}/hqdefault.jpg`;
+        img.alt = 'YouTube Video';
+        
+        const playIcon = document.createElement('div');
+        playIcon.className = 'play-icon';
+        item.appendChild(playIcon);
+      } else {
+        img.src = mediaData.url;
+        img.alt = 'Artwork';
+      }
+
+      item.appendChild(img);
+
+      const overlay = document.createElement('div');
+      overlay.className = 'overlay-actions';
+
+      const btnExpand = document.createElement('button');
+      btnExpand.className = 'action-btn btn-expand-item';
+      btnExpand.textContent = 'ขยาย';
+      btnExpand.onclick = (e) => {
+        e.stopPropagation();
+        openModal(item, img, mediaData);
+      };
+
+      const btnDetail = document.createElement('button');
+      btnDetail.className = 'action-btn btn-detail-item';
+      btnDetail.textContent = 'รายละเอียด';
+      btnDetail.onclick = (e) => {
+        e.stopPropagation();
+        openDetailModal(mediaData);
+      };
+
+      overlay.appendChild(btnExpand);
+      overlay.appendChild(btnDetail);
+      item.appendChild(overlay);
+
+      return item;
+    }
+
+    function addMoreItems() {
+      if (currentPool.length === 0) {
+        btnAdd.style.display = 'none';
+        return;
+      }
+
+      btnAdd.style.display = 'inline-block';
+      const count = 3;
+      const itemsToAdd = Math.min(count, currentPool.length);
+
+      for (let i = 0; i < itemsToAdd; i++) {
+        const mediaData = currentPool.shift();
+        const mediaElement = createGalleryItem(mediaData);
+        gallery.appendChild(mediaElement);
+      }
+
+      if (currentPool.length === 0) {
+        btnAdd.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('resize', () => {
+      if (modal.classList.contains('active')) {
+        updateModalLayout();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (modal.classList.contains('active')) closeModal();
+        if (detailModal.classList.contains('active')) closeDetailModal();
+      }
+    });
+
+    generateMoreItems();
+    addMoreItems();
+  </script>
+
+</body>
+</html>
