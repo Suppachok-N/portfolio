@@ -184,6 +184,7 @@
       border: 1px solid var(--border-color);
       box-shadow: 0 10px 25px rgba(0,0,0,0.8);
       position: relative;
+      cursor: pointer;
     }
 
     .gallery-item img {
@@ -193,7 +194,8 @@
       transition: transform 0.3s ease;
     }
 
-    .gallery-item:hover img {
+    .gallery-item:hover img,
+    .gallery-item.show-actions img {
       transform: scale(1.03);
     }
 
@@ -214,7 +216,8 @@
     }
 
     .gallery-item:hover .overlay-actions,
-    .gallery-item:focus-within .overlay-actions {
+    .gallery-item:focus-within .overlay-actions,
+    .gallery-item.show-actions .overlay-actions {
       opacity: 1;
     }
 
@@ -566,7 +569,15 @@
       navigator.clipboard.writeText('suppachoknuthep@gmail.com').then(() => toast.classList.add('show'));
     });
 
-    document.addEventListener('click', () => toast.classList.remove('show'));
+    document.addEventListener('click', (e) => {
+      toast.classList.remove('show');
+
+      if (!e.target.closest('.gallery-item')) {
+        document.querySelectorAll('.gallery-item.show-actions').forEach(item => {
+          item.classList.remove('show-actions');
+        });
+      }
+    });
 
     let activeItem = null;
     let activeThumb = null;
@@ -885,6 +896,24 @@
       overlay.appendChild(btnExpand);
       overlay.appendChild(btnDetail);
       item.appendChild(overlay);
+
+      item.addEventListener('click', (e) => {
+        if (e.target.closest('.action-btn')) return;
+
+        const isAlreadyShowing = item.classList.contains('show-actions');
+
+        document.querySelectorAll('.gallery-item.show-actions').forEach(otherItem => {
+          if (otherItem !== item) {
+            otherItem.classList.remove('show-actions');
+          }
+        });
+
+        if (!isAlreadyShowing) {
+          item.classList.add('show-actions');
+        } else {
+          item.classList.remove('show-actions');
+        }
+      });
 
       return item;
     }
