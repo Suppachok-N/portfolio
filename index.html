@@ -61,12 +61,6 @@
       color: var(--text-primary);
     }
 
-    .subtitle {
-      text-align: center;
-      color: var(--text-secondary);
-      margin-bottom: 20px;
-    }
-
     .social-icons {
       display: flex;
       justify-content: center;
@@ -134,12 +128,7 @@
       transition: all 0.2s ease;
     }
 
-    .filter-btn:hover {
-      background-color: var(--accent-color);
-      color: var(--bg-color);
-    }
-
-    .filter-btn.active {
+    .filter-btn:hover, .filter-btn.active {
       background-color: var(--accent-color);
       color: var(--bg-color);
       border-color: var(--accent-color);
@@ -157,12 +146,7 @@
       transition: all 0.2s ease;
     }
 
-    .sub-filter-btn:hover {
-      border-color: var(--accent-color);
-      color: var(--accent-color);
-    }
-
-    .sub-filter-btn.active {
+    .sub-filter-btn:hover, .sub-filter-btn.active {
       background-color: rgba(56, 189, 248, 0.1);
       color: var(--accent-color);
       border-color: var(--accent-color);
@@ -470,49 +454,47 @@
 
   <div class="filter-section">
     <div class="filter-menu">
-      <button class="filter-btn active" onclick="filterMainCategory('all', this)">All</button>
-      <button class="filter-btn" onclick="filterMainCategory('image', this)">Visual</button>
-      <button class="filter-btn" onclick="filterMainCategory('audio', this)">Audio</button>
-      <button class="filter-btn" onclick="filterMainCategory('webapp', this)">Web App</button>
+      <button class="filter-btn active" onclick="setMainFilter('all', this)">All</button>
+      <button class="filter-btn" onclick="setMainFilter('image', this)">Visual</button>
+      <button class="filter-btn" onclick="setMainFilter('audio', this)">Audio</button>
+      <button class="filter-btn" onclick="setMainFilter('webapp', this)">Web App</button>
     </div>
 
-    <div class="sub-filter-menu" id="imageSubFilter">
-      <button class="sub-filter-btn active" onclick="filterSubCategory('all_image', this)">All Visual</button>
-      <button class="sub-filter-btn" onclick="filterSubCategory('illustration', this)">Illustration</button>
-      <button class="sub-filter-btn" onclick="filterSubCategory('graphic', this)">Graphic</button>
-      <button class="sub-filter-btn" onclick="filterSubCategory('2d_animate', this)">2D Animate</button>
+    <div class="sub-filter-menu" id="subFilterContainer">
+      <button class="sub-filter-btn active" onclick="setSubFilter('all_image', this)">All Visual</button>
+      <button class="sub-filter-btn" onclick="setSubFilter('illustration', this)">Illustration</button>
+      <button class="sub-filter-btn" onclick="setSubFilter('graphic', this)">Graphic</button>
+      <button class="sub-filter-btn" onclick="setSubFilter('2d_animate', this)">2D Animate</button>
     </div>
   </div>
 
   <div class="gallery-container" id="gallery"></div>
 
   <div class="btn-container">
-    <button class="btn-add" id="btnAdd" onclick="addMoreItems()">More</button>
+    <button class="btn-add" id="loadMoreBtn" onclick="renderMoreItems()">More</button>
   </div>
 
-  <div class="detail-modal-overlay" id="detailModal" onclick="handleModalClick(event)">
+  <div class="detail-modal-overlay" id="modalOverlay" onclick="handleModalClick(event)">
     <div class="detail-card">
-      <button class="detail-btn-close" onclick="closeDetailModal()">&times;</button>
-      <div class="detail-media-container" id="detailMediaBox"></div>
+      <button class="detail-btn-close" onclick="closeModal()">&times;</button>
+      <div class="detail-media-container" id="modalMedia"></div>
       <div class="detail-content">
-        <h3 id="detailTitle"></h3>
-        <div class="detail-tags" id="detailTags"></div>
-        <p id="detailDescription"></p>
+        <h3 id="modalTitle"></h3>
+        <div class="detail-tags" id="modalTags"></div>
+        <p id="modalDesc"></p>
       </div>
     </div>
   </div>
 
   <script>
     const gallery = document.getElementById('gallery');
-    const btnAdd = document.getElementById('btnAdd');
-
-    const detailModal = document.getElementById('detailModal');
-    const detailMediaBox = document.getElementById('detailMediaBox');
-    const detailTitle = document.getElementById('detailTitle');
-    const detailTags = document.getElementById('detailTags');
-    const detailDescription = document.getElementById('detailDescription');
-    const imageSubFilter = document.getElementById('imageSubFilter');
-
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalMedia = document.getElementById('modalMedia');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalTags = document.getElementById('modalTags');
+    const modalDesc = document.getElementById('modalDesc');
+    const subFilterContainer = document.getElementById('subFilterContainer');
     const toast = document.getElementById('toast');
 
     document.getElementById('emailBtn').addEventListener('click', (e) => {
@@ -522,77 +504,37 @@
 
     document.addEventListener('click', () => toast.classList.remove('show'));
     
-    let currentMainTag = 'all';
-    let currentSubTag = 'all_image';
+    let activeMainCategory = 'all';
+    let activeSubCategory = 'all_image';
 
-    const myMedia = [
-      { tags: ['webapp'], type: 'webapp', title: 'Tarot Pick', link: 'https://cokechok.github.io/tarot-pick/', desc: `• สุ่มไพ่ทาโรต์
-     • พัฒนาด้วย HTML, CSS, JavaScript
-     • AI ที่ใช้: Gemini` },
-      { tags: ['webapp'], type: 'webapp', title: 'Chord Identifier', link: 'https://cokechok.github.io/chord-identifier/', desc: `• ระบุชื่อคอร์ดจากโน้ตที่กดแบบเรียลไทม์
-     • พัฒนาด้วย HTML, CSS, JavaScript
-     • AI ที่ใช้: Gemini` },
-      { tags: ['webapp'], type: 'webapp', title: 'THB / USD / JPY Converter', link: 'https://cokechok.github.io/thb-usd-jpy-converter/', desc: `• แปลงอัตราแลกเปลี่ยนเงิน 3 สกุล
-     • พัฒนาด้วย HTML, CSS, JavaScript
-     • AI ที่ใช้: Gemini` },
-      { tags: ['webapp'], type: 'webapp', title: 'Binaural Beats Generator', link: 'https://cokechok.github.io/binaural-beats/', desc: `• สร้างคลื่นเสียง Binaural Beats สำหรับการทำสมาธิและการพักผ่อน
-     • พัฒนาด้วย Web Audio API, HTML, CSS, JavaScript
-     • AI ที่ใช้: Gemini` },
-      { tags: ['audio'], type: 'youtube', id: 'prE-CU5Ruqs', title: 'GOPGAP', desc: `• จบงานเป็น .wav ไฟล์เดียวที่เอาไปรวมกับงานภาพได้เลย
-    • เสียง FX, Foley, บรรยากาศ เกือบทั้งหมดนำมาจาก 3rd Party
-    • ซอฟต์แวร์ที่ใช้: Ableton Live
-    • ไม่ใช้ AI` },
-      { tags: ['audio'], type: 'youtube', id: '6YZIQ8rhybQ', title: 'A Daily Disaster', desc: `• จบงานเป็น .wav ไฟล์เดียวที่เอาไปรวมกับงานภาพได้เลย
-    • เสียง FX, Foley, บรรยากาศ เกือบทั้งหมดนำมาจาก 3rd Party
-    • กำกับพากย์เอง
-    • ซอฟต์แวร์ที่ใช้: Ableton Live
-    • ไม่ใช้ AI` },
-      { tags: ['audio'], type: 'youtube', id: '2MLnYi3CVW4', title: 'A Daily Disaster', desc: `• จบงานเป็น .wav ไฟล์เดียวที่เอาไปรวมกับงานภาพได้เลย
-    • เสียง FX, Foley, บรรยากาศ เกือบทั้งหมดนำมาจาก 3rd Party
-    • กำกับพากย์เอง
-    • ซอฟต์แวร์ที่ใช้: Ableton Live
-    • ไม่ใช้ AI` },
-     { tags: ['2d_animate'], type: 'youtube', id: '3WiSuG1dFGw', title: 'ส่วนหนึ่งของ Interrogator', desc: `• งานตำแหน่ง 2D Animator ที่ M2 Animation Studio Co., Ltd.
-    • ส่วนที่รับผิดชอบ: การเคลื่อนไหวของตัวละคร
-    • ซอฟต์แวร์ที่ใช้: Toon Boom Harmony
-   • ไม่ใช้ AI` },
-     { tags: ['2d_animate'], type: 'youtube', id: 'x7kNhP0kfys', title: 'ส่วนหนึ่งของ ちみも (Chimimo)', desc: `• งานตำแหน่ง 2D Animator ที่ M2 Animation Studio Co., Ltd.
-    • ส่วนที่รับผิดชอบ: การเคลื่อนไหวของตัวละคร
-    • ซอฟต์แวร์ที่ใช้: Toon Boom Harmony
-   • ไม่ใช้ AI` },
-      { tags: ['2d_animate'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Anim-Gunfight.gif?raw=true', title: 'Gunfight', desc: `• ซอฟต์แวร์ที่ใช้: Toon Boom Harmony
-    • ไม่ใช้ AI` },
-      { tags: ['2d_animate'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Anim-L_Run.gif?raw=true', title: 'Run cycle', desc: `• ซอฟต์แวร์ที่ใช้: Toon Boom Harmony
-    • ไม่ใช้ AI` },
-      { tags: ['2d_animate'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Anim-Transform.gif?raw=true', title: 'Transform', desc: `• ซอฟต์แวร์ที่ใช้: Toon Boom Harmony
-    • ไม่ใช้ AI` },
-      { tags: ['graphic'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Graph-Alert_HUD.jpg?raw=true', title: 'HUD interface', desc: `• ซอฟต์แวร์ที่ใช้: Inkscape, Davinci Resole
-    • ไม่ใช้ AI` },
-      { tags: ['graphic'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Graph-Maneki_Neko.jpg?raw=true', title: 'Maneki Neko', desc: `• ซอฟต์แวร์ที่ใช้: Inkscape
-    • ไม่ใช้ AI` },
-      { tags: ['graphic'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Graph-Sustainable_Icon.jpg?raw=true', title: 'Sustainable icon set', desc: `• ซอฟต์แวร์ที่ใช้: Inkscape
-    • ไม่ใช้ AI` },
-      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-Base.png?raw=true', title: 'Outer base', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint
-    • ไม่ใช้ AI` },
-      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L-Captain.png?raw=true', title: 'Captain', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint
-    • ไม่ใช้ AI` },
-      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L-F-Operation.png?raw=true', title: 'Operation', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint
-    • ไม่ใช้ AI` },
-      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L-K-Fight.png?raw=true', title: 'Fight', desc: `ซอฟต์แวร์ที่ใช้: Clip Studio Paint
-    • ไม่ใช้ AI` },
-      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L-Singing.png?raw=true', title: 'Singing', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint
-    • ไม่ใช้ AI` },
-      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L_M_Action.png?raw=true', title: 'Action', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint
-    • ไม่ใช้ AI` },
-      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L_Operator.png?raw=true', title: 'Operator', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint
-    • ไม่ใช้ AI` },
-      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-Natsuki.png?raw=true', title: 'Natsuki', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint
-    • ไม่ใช้ AI` },
-      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-Norigo.png?raw=true', title: 'Norigo', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint
-    • ไม่ใช้ AI` },
+    const mediaList = [
+      { tags: ['webapp'], type: 'webapp', title: 'Tarot Pick', link: 'https://cokechok.github.io/tarot-pick/', desc: `• สุ่มไพ่ทาโรต์\n• พัฒนาด้วย HTML, CSS, JavaScript\n• AI ที่ใช้: Gemini` },
+      { tags: ['webapp'], type: 'webapp', title: 'Chord Identifier', link: 'https://cokechok.github.io/chord-identifier/', desc: `• ระบุชื่อคอร์ดจากโน้ตที่กดแบบเรียลไทม์\n• พัฒนาด้วย HTML, CSS, JavaScript\n• AI ที่ใช้: Gemini` },
+      { tags: ['webapp'], type: 'webapp', title: 'THB / USD / JPY Converter', link: 'https://cokechok.github.io/thb-usd-jpy-converter/', desc: `• แปลงอัตราแลกเปลี่ยนเงิน 3 สกุล\n• พัฒนาด้วย HTML, CSS, JavaScript\n• AI ที่ใช้: Gemini` },
+      { tags: ['webapp'], type: 'webapp', title: 'Binaural Beats Generator', link: 'https://cokechok.github.io/binaural-beats/', desc: `• สร้างคลื่นเสียง Binaural Beats สำหรับการทำสมาธิและการพักผ่อน\n• พัฒนาด้วย Web Audio API, HTML, CSS, JavaScript\n• AI ที่ใช้: Gemini` },
+      { tags: ['audio'], type: 'youtube', id: 'prE-CU5Ruqs', title: 'GOPGAP', desc: `• จบงานเป็น .wav ไฟล์เดียวที่เอาไปรวมกับงานภาพได้เลย\n• เสียง FX, Foley, บรรยากาศ เกือบทั้งหมดนำมาจาก 3rd Party\n• ซอฟต์แวร์ที่ใช้: Ableton Live\n• ไม่ใช้ AI` },
+      { tags: ['audio'], type: 'youtube', id: '6YZIQ8rhybQ', title: 'A Daily Disaster', desc: `• จบงานเป็น .wav ไฟล์เดียวที่เอาไปรวมกับงานภาพได้เลย\n• เสียง FX, Foley, บรรยากาศ เกือบทั้งหมดนำมาจาก 3rd Party\n• กำกับพากย์เอง\n• ซอฟต์แวร์ที่ใช้: Ableton Live\n• ไม่ใช้ AI` },
+      { tags: ['audio'], type: 'youtube', id: '2MLnYi3CVW4', title: 'A Daily Disaster', desc: `• จบงานเป็น .wav ไฟล์เดียวที่เอาไปรวมกับงานภาพได้เลย\n• เสียง FX, Foley, บรรยากาศ เกือบทั้งหมดนำมาจาก 3rd Party\n• กำกับพากย์เอง\n• ซอฟต์แวร์ที่ใช้: Ableton Live\n• ไม่ใช้ AI` },
+      { tags: ['2d_animate'], type: 'youtube', id: '3WiSuG1dFGw', title: 'ส่วนหนึ่งของ Interrogator', desc: `• งานตำแหน่ง 2D Animator ที่ M2 Animation Studio Co., Ltd.\n• ส่วนที่รับผิดชอบ: การเคลื่อนไหวของตัวละคร\n• ซอฟต์แวร์ที่ใช้: Toon Boom Harmony\n• ไม่ใช้ AI` },
+      { tags: ['2d_animate'], type: 'youtube', id: 'x7kNhP0kfys', title: 'ส่วนหนึ่งของ ちみも (Chimimo)', desc: `• งานตำแหน่ง 2D Animator ที่ M2 Animation Studio Co., Ltd.\n• ส่วนที่รับผิดชอบ: การเคลื่อนไหวของตัวละคร\n• ซอฟต์แวร์ที่ใช้: Toon Boom Harmony\n• ไม่ใช้ AI` },
+      { tags: ['2d_animate'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Anim-Gunfight.gif?raw=true', title: 'Gunfight', desc: `• ซอฟต์แวร์ที่ใช้: Toon Boom Harmony\n• ไม่ใช้ AI` },
+      { tags: ['2d_animate'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Anim-L_Run.gif?raw=true', title: 'Run cycle', desc: `• ซอฟต์แวร์ที่ใช้: Toon Boom Harmony\n• ไม่ใช้ AI` },
+      { tags: ['2d_animate'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Anim-Transform.gif?raw=true', title: 'Transform', desc: `• ซอฟต์แวร์ที่ใช้: Toon Boom Harmony\n• ไม่ใช้ AI` },
+      { tags: ['graphic'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Graph-Alert_HUD.jpg?raw=true', title: 'HUD interface', desc: `• ซอฟต์แวร์ที่ใช้: Inkscape, Davinci Resole\n• ไม่ใช้ AI` },
+      { tags: ['graphic'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Graph-Maneki_Neko.jpg?raw=true', title: 'Maneki Neko', desc: `• ซอฟต์แวร์ที่ใช้: Inkscape\n• ไม่ใช้ AI` },
+      { tags: ['graphic'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Graph-Sustainable_Icon.jpg?raw=true', title: 'Sustainable icon set', desc: `• ซอฟต์แวร์ที่ใช้: Inkscape\n• ไม่ใช้ AI` },
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-Base.png?raw=true', title: 'Outer base', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L-Captain.png?raw=true', title: 'Captain', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L-F-Operation.png?raw=true', title: 'Operation', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L-K-Fight.png?raw=true', title: 'Fight', desc: `ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L-Singing.png?raw=true', title: 'Singing', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L_M_Action.png?raw=true', title: 'Action', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L_Operator.png?raw=true', title: 'Operator', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-Natsuki.png?raw=true', title: 'Natsuki', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-Norigo.png?raw=true', title: 'Norigo', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` }
     ];
 
-    let currentPool = [];
+    let pendingItems = [];
 
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
@@ -602,24 +544,24 @@
       return array;
     }
 
-    function filterMainCategory(selectedTag, btnElement) {
-      currentMainTag = selectedTag;
+    function setMainFilter(category, btnElement) {
+      activeMainCategory = category;
       document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
       btnElement.classList.add('active');
 
-      if (selectedTag === 'image') {
-        imageSubFilter.classList.add('active');
-        currentSubTag = 'all_image';
+      if (category === 'image') {
+        subFilterContainer.classList.add('active');
+        activeSubCategory = 'all_image';
         resetSubFilterButtons();
       } else {
-        imageSubFilter.classList.remove('active');
+        subFilterContainer.classList.remove('active');
       }
 
       refreshGallery();
     }
 
-    function filterSubCategory(subTag, btnElement) {
-      currentSubTag = subTag;
+    function setSubFilter(subCategory, btnElement) {
+      activeSubCategory = subCategory;
       document.querySelectorAll('.sub-filter-btn').forEach(btn => btn.classList.remove('active'));
       btnElement.classList.add('active');
 
@@ -628,161 +570,132 @@
 
     function resetSubFilterButtons() {
       const subBtns = document.querySelectorAll('.sub-filter-btn');
-      subBtns.forEach(btn => btn.classList.remove('active'));
-      if (subBtns.length > 0) subBtns[0].classList.add('active');
+      subBtns.forEach((btn, idx) => btn.classList.toggle('active', idx === 0));
     }
 
     function refreshGallery() {
       gallery.innerHTML = '';
-      generateMoreItems();
-      addMoreItems();
+      prepareFilteredItems();
+      renderMoreItems();
     }
 
-    function generateMoreItems() {
+    function prepareFilteredItems() {
       let filtered = [];
 
-      if (currentMainTag === 'all') {
-        filtered = myMedia;
-      } else if (currentMainTag === 'audio') {
-        filtered = myMedia.filter(item => item.tags && item.tags.includes('audio'));
-      } else if (currentMainTag === 'webapp') {
-        filtered = myMedia.filter(item => item.tags && item.tags.includes('webapp'));
-      } else if (currentMainTag === 'image') {
-        const imageTags = ['illustration', 'graphic', '2d_animate'];
-        if (currentSubTag === 'all_image') {
-          filtered = myMedia.filter(item => item.tags && item.tags.some(t => imageTags.includes(t)));
-        } else {
-          filtered = myMedia.filter(item => item.tags && item.tags.includes(currentSubTag));
-        }
+      if (activeMainCategory === 'all') {
+        filtered = mediaList;
+      } else if (activeMainCategory === 'image') {
+        const visualTags = ['illustration', 'graphic', '2d_animate'];
+        filtered = mediaList.filter(item => 
+          activeSubCategory === 'all_image' 
+            ? item.tags?.some(tag => visualTags.includes(tag))
+            : item.tags?.includes(activeSubCategory)
+        );
+      } else {
+        filtered = mediaList.filter(item => item.tags?.includes(activeMainCategory));
       }
       
-      currentPool = shuffleArray([...filtered]);
+      pendingItems = shuffleArray([...filtered]);
     }
 
-    function openDetailModal(mediaData) {
-      detailMediaBox.innerHTML = '';
-      if (mediaData.type === 'youtube') {
+    function openModal(item) {
+      modalMedia.innerHTML = '';
+      if (item.type === 'youtube') {
         const iframe = document.createElement('iframe');
-        iframe.src = `https://www.youtube.com/embed/${mediaData.id}?autoplay=1`;
+        iframe.src = `https://www.youtube.com/embed/${item.id}?autoplay=1`;
         iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
         iframe.allowFullscreen = true;
-        detailMediaBox.appendChild(iframe);
-      } else if (mediaData.type === 'webapp') {
+        modalMedia.appendChild(iframe);
+      } else if (item.type === 'webapp') {
         const container = document.createElement('div');
         container.className = 'webapp-modal-preview';
         container.innerHTML = `
-          <a href="${mediaData.link}" target="_blank" class="btn-visit-app">
+          <a href="${item.link}" target="_blank" class="btn-visit-app">
             Open Web App <i class="fa-solid fa-arrow-up-right-from-square"></i>
           </a>
         `;
-        detailMediaBox.appendChild(container);
+        modalMedia.appendChild(container);
       } else {
         const img = document.createElement('img');
-        img.src = mediaData.url;
-        detailMediaBox.appendChild(img);
+        img.src = item.url;
+        modalMedia.appendChild(img);
       }
 
-      detailTitle.textContent = mediaData.title || 'ไม่มีชื่อ';
+      modalTitle.textContent = item.title || 'ไม่มีชื่อ';
+      modalTags.innerHTML = '';
       
-      detailTags.innerHTML = '';
-      if (mediaData.tags && mediaData.tags.length > 0) {
-        const tagMap = { 
-          illustration: 'Illustration', 
-          graphic: 'Graphic', 
-          '2d_animate': '2D Animate', 
-          audio: 'Audio',
-          webapp: 'Web App'
-        };
-        mediaData.tags.forEach(t => {
-          const span = document.createElement('span');
-          span.className = 'tag-badge';
-          span.textContent = tagMap[t] || t;
-          detailTags.appendChild(span);
-        });
-      }
+      const tagMap = { 
+        illustration: 'Illustration', 
+        graphic: 'Graphic', 
+        '2d_animate': '2D Animate', 
+        audio: 'Audio',
+        webapp: 'Web App'
+      };
 
-      detailDescription.textContent = mediaData.desc || 'ไม่มีรายละเอียด';
+      item.tags?.forEach(tag => {
+        const span = document.createElement('span');
+        span.className = 'tag-badge';
+        span.textContent = tagMap[tag] || tag;
+        modalTags.appendChild(span);
+      });
 
-      detailModal.classList.add('active');
+      modalDesc.textContent = item.desc || 'ไม่มีรายละเอียด';
+      modalOverlay.classList.add('active');
     }
 
-    function closeDetailModal() {
-      detailModal.classList.remove('active');
-      detailMediaBox.innerHTML = '';
+    function closeModal() {
+      modalOverlay.classList.remove('active');
+      modalMedia.innerHTML = '';
     }
 
     function handleModalClick(e) {
-      if (e.target === detailModal) {
-        closeDetailModal();
-      }
+      if (e.target === modalOverlay) closeModal();
     }
 
-    function createGalleryItem(mediaData) {
-      const item = document.createElement('div');
-      item.className = 'gallery-item';
+    function createCardElement(item) {
+      const card = document.createElement('div');
+      card.className = 'gallery-item';
 
-      if (mediaData.type === 'youtube') {
-        const img = document.createElement('img');
-        img.loading = 'lazy';
-        img.src = `https://img.youtube.com/vi/${mediaData.id}/hqdefault.jpg`;
-        img.alt = 'YouTube Video';
-        
-        const playIcon = document.createElement('div');
-        playIcon.className = 'play-icon';
-        item.appendChild(img);
-        item.appendChild(playIcon);
-      } else if (mediaData.type === 'webapp') {
-        const preview = document.createElement('div');
-        preview.className = 'webapp-card-preview';
-        preview.innerHTML = `
-          <div class="webapp-badge-text">Web App</div>
-          <div class="webapp-card-title">${mediaData.title}</div>
+      if (item.type === 'youtube') {
+        card.innerHTML = `
+          <img loading="lazy" src="https://img.youtube.com/vi/${item.id}/hqdefault.jpg" alt="YouTube Video">
+          <div class="play-icon"></div>
         `;
-        item.appendChild(preview);
+      } else if (item.type === 'webapp') {
+        card.innerHTML = `
+          <div class="webapp-card-preview">
+            <div class="webapp-badge-text">Web App</div>
+            <div class="webapp-card-title">${item.title}</div>
+          </div>
+        `;
       } else {
-        const img = document.createElement('img');
-        img.loading = 'lazy';
-        img.src = mediaData.url;
-        img.alt = 'Artwork';
-        item.appendChild(img);
+        card.innerHTML = `<img loading="lazy" src="${item.url}" alt="Artwork">`;
       }
 
-      item.onclick = () => {
-        openDetailModal(mediaData);
-      };
-
-      return item;
+      card.onclick = () => openModal(item);
+      return card;
     }
 
-    function addMoreItems() {
-      if (currentPool.length === 0) {
-        btnAdd.style.display = 'none';
+    function renderMoreItems() {
+      if (pendingItems.length === 0) {
+        loadMoreBtn.style.display = 'none';
         return;
       }
 
-      btnAdd.style.display = 'inline-block';
-      const count = 3;
-      const itemsToAdd = Math.min(count, currentPool.length);
+      const itemsToRender = pendingItems.splice(0, 3);
+      itemsToRender.forEach(item => gallery.appendChild(createCardElement(item)));
 
-      for (let i = 0; i < itemsToAdd; i++) {
-        const mediaData = currentPool.shift();
-        const mediaElement = createGalleryItem(mediaData);
-        gallery.appendChild(mediaElement);
-      }
-
-      if (currentPool.length === 0) {
-        btnAdd.style.display = 'none';
-      }
+      loadMoreBtn.style.display = pendingItems.length > 0 ? 'inline-block' : 'none';
     }
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        if (detailModal.classList.contains('active')) closeDetailModal();
+      if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+        closeModal();
       }
     });
 
-    generateMoreItems();
-    addMoreItems();
+    prepareFilteredItems();
+    renderMoreItems();
   </script>
 
 </body>
