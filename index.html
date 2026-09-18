@@ -10,12 +10,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <style>
     :root {
-      --bg: #000000;
+      --bg-color: #000000;
       --card-bg: #111111;
-      --accent: #38bdf8;
-      --text-main: #f8fafc;
-      --text-sub: #94a3b8;
-      --border: #222222;
+      --accent-color: #38bdf8;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --border-color: #222222;
     }
 
     * {
@@ -26,8 +26,8 @@
     }
 
     body {
-      background-color: var(--bg);
-      color: var(--text-main);
+      background-color: var(--bg-color);
+      color: var(--text-primary);
       padding: 20px;
       min-height: 100vh;
       overflow-x: hidden;
@@ -36,6 +36,7 @@
     h1 {
       text-align: center;
       margin: 20px 0 10px;
+      color: var(--text-primary);
       font-size: 1rem;
     }
 
@@ -54,18 +55,19 @@
       height: 40px;
       border-radius: 50%;
       background-color: rgba(56, 189, 248, 0.1);
-      color: var(--accent);
-      border: 1px solid var(--accent);
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
       font-size: 1.1rem;
       transition: all 0.2s ease;
+      cursor: pointer;
       text-decoration: none;
       -webkit-tap-highlight-color: transparent;
     }
 
     @media (hover: hover) {
       .social-btn:hover {
-        background-color: var(--accent);
-        color: var(--bg);
+        background-color: var(--accent-color);
+        color: var(--bg-color);
       }
     }
 
@@ -89,13 +91,18 @@
       display: flex;
       justify-content: flex-start;
       gap: 10px;
+      flex-wrap: nowrap;
       overflow-x: auto;
       width: calc(100% + 40px);
-      margin: 0 -20px;
+      margin-left: -20px;
+      margin-right: -20px;
       padding: 8px 36px;
       background-color: rgba(255, 255, 255, 0.02);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      border-left: none;
+      border-right: none;
+      border-radius: 0;
       -webkit-overflow-scrolling: touch;
       white-space: nowrap;
       scrollbar-width: none;
@@ -103,38 +110,48 @@
       user-select: none;
     }
 
-    .sub-filter-menu .sub-filter-btn:first-child { margin-left: auto; }
-    .sub-filter-menu .sub-filter-btn:last-child { margin-right: auto; }
-    .sub-filter-menu:active { cursor: grabbing; }
-    .sub-filter-menu::-webkit-scrollbar { display: none; }
+    .sub-filter-menu .sub-filter-btn:first-child {
+      margin-left: auto;
+    }
 
-    .filter-btn, .sub-filter-btn, .toggle-all-btn, .btn-add, .detail-btn-close {
-      cursor: pointer;
-      transition: all 0.2s ease;
-      overflow: hidden;
-      -webkit-tap-highlight-color: transparent;
-      outline: none;
-      background-color: transparent;
+    .sub-filter-menu .sub-filter-btn:last-child {
+      margin-right: auto;
+    }
+
+    .sub-filter-menu:active {
+      cursor: grabbing;
+    }
+
+    .sub-filter-menu::-webkit-scrollbar {
+      display: none;
     }
 
     .filter-btn {
       padding: 8px 18px;
       font-size: 15px;
       font-weight: 600;
-      color: var(--accent);
-      border: 1px solid var(--accent);
+      background-color: transparent;
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
       border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
     }
 
     .filter-btn.active {
-      background-color: var(--accent);
-      color: var(--bg);
+      background-color: var(--accent-color);
+      color: var(--bg-color);
+      border-color: var(--accent-color);
     }
 
     @media (hover: hover) {
       .filter-btn:hover {
-        background-color: var(--accent);
-        color: var(--bg);
+        background-color: var(--accent-color);
+        color: var(--bg-color);
+        border-color: var(--accent-color);
       }
     }
 
@@ -143,22 +160,28 @@
       padding: 6px 14px;
       font-size: 13px;
       font-weight: 600;
-      color: var(--text-sub);
-      border: 1px solid var(--border);
+      background-color: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
       border-radius: 15px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
     }
 
     .sub-filter-btn.active {
       background-color: rgba(56, 189, 248, 0.1);
-      color: var(--accent);
-      border-color: var(--accent);
+      color: var(--accent-color);
+      border-color: var(--accent-color);
     }
 
     @media (hover: hover) {
       .sub-filter-btn:hover {
         background-color: rgba(56, 189, 248, 0.1);
-        color: var(--accent);
-        border-color: var(--accent);
+        color: var(--accent-color);
+        border-color: var(--accent-color);
       }
     }
 
@@ -166,17 +189,23 @@
       padding: 4px 12px;
       font-size: 11px;
       font-weight: 500;
-      color: var(--text-sub);
-      border: 1px solid var(--border);
+      background-color: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
       border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
       opacity: 0.8;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
     }
 
     @media (hover: hover) {
       .toggle-all-btn:hover {
         opacity: 1;
-        color: var(--accent);
-        border-color: var(--accent);
+        color: var(--accent-color);
+        border-color: var(--accent-color);
         background-color: rgba(56, 189, 248, 0.1);
       }
     }
@@ -194,7 +223,7 @@
       border-radius: 8px;
       overflow: hidden;
       background-color: var(--card-bg);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-color);
       box-shadow: 0 10px 25px rgba(0,0,0,0.8);
       position: relative;
       cursor: pointer;
@@ -202,12 +231,20 @@
 
     .gallery-item img {
       width: 100%;
+      height: auto;
       display: block;
       transition: transform 0.3s ease;
     }
 
+    .gallery-item img.youtube-thumb {
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+
     @media (hover: hover) {
-      .gallery-item:hover img { transform: scale(1.03); }
+      .gallery-item:hover img {
+        transform: scale(1.03);
+      }
     }
 
     .play-icon {
@@ -218,20 +255,25 @@
       width: 48px;
       height: 48px;
       background-color: rgba(0, 0, 0, 0.6);
-      border: 2px solid var(--accent);
+      border: 2px solid var(--accent-color);
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
       pointer-events: none;
+      transition: transform 0.3s ease, background-color 0.3s ease;
       z-index: 1;
     }
 
     .play-icon::after {
       content: "";
+      display: block;
+      width: 0;
+      height: 0;
       border-style: solid;
       border-width: 8px 0 8px 14px;
-      border-color: transparent transparent transparent var(--accent);
+      border-color: transparent transparent transparent var(--accent-color);
       margin-left: 3px;
     }
 
@@ -244,21 +286,22 @@
       justify-content: center;
       text-align: center;
       min-height: 160px;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--border-color);
       gap: 12px;
     }
 
     .webapp-badge-text {
       font-size: 1rem;
       font-weight: 700;
-      color: var(--accent);
+      color: var(--accent-color);
       text-transform: uppercase;
       letter-spacing: 1px;
     }
 
-    .webapp-card-title {
+    .webapp-card-preview .webapp-card-title {
       font-size: 1.1rem;
       font-weight: 600;
+      color: var(--text-primary);
     }
 
     .btn-container {
@@ -269,21 +312,27 @@
     .btn-add {
       padding: 12px 28px;
       font-size: 16px;
-      color: var(--accent);
-      border: 1px solid var(--accent);
+      background-color: transparent;
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
       border-radius: 8px;
+      cursor: pointer;
       font-weight: 600;
+      transition: all 0.2s ease;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
     }
 
     @media (hover: hover) {
       .btn-add:hover {
-        background-color: var(--accent);
-        color: var(--bg);
+        background-color: var(--accent-color);
+        color: var(--bg-color);
         transform: translateY(-2px);
       }
     }
 
-    .modal {
+    .detail-modal-overlay {
       display: none;
       position: fixed;
       top: 0;
@@ -297,16 +346,19 @@
       padding: 20px;
     }
 
-    .modal.show { display: flex; }
+    .detail-modal-overlay.active {
+      display: flex;
+    }
 
     .detail-card {
       background: var(--card-bg);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-color);
       width: 100%;
       max-width: 800px;
       max-height: 90vh;
       border-radius: 12px;
       overflow-y: auto;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.8);
       position: relative;
       display: flex;
       flex-direction: column;
@@ -325,20 +377,25 @@
       width: 32px;
       height: 32px;
       background-color: var(--card-bg);
-      color: var(--accent);
-      border: 1px solid var(--accent);
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
       border-radius: 50%;
       font-size: 18px;
+      cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
       z-index: 10;
+      transition: all 0.2s;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
     }
 
     @media (hover: hover) {
       .detail-btn-close:hover {
-        background-color: var(--accent);
-        color: var(--bg);
+        background-color: var(--accent-color);
+        color: var(--bg-color);
       }
     }
 
@@ -350,7 +407,7 @@
       justify-content: center;
       align-items: center;
       overflow: hidden;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--border-color);
     }
 
     .detail-media-container img {
@@ -367,24 +424,47 @@
     }
 
     .webapp-modal-preview {
+      width: 100%;
       padding: 60px 20px;
       background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
 
     .btn-visit-app {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 8px;
       padding: 14px 28px;
-      background-color: var(--accent);
-      color: var(--bg);
+      background-color: var(--accent-color);
+      color: var(--bg-color);
       text-decoration: none;
       border-radius: 8px;
       font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .detail-content { padding: 20px; }
-    .detail-content h3 { margin-bottom: 8px; }
+    @media (hover: hover) {
+      .btn-visit-app:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+      }
+    }
+
+    .detail-content {
+      padding: 20px;
+    }
+
+    .detail-content h3 {
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
 
     .detail-tags {
       display: flex;
@@ -396,20 +476,24 @@
     .tag-badge {
       font-size: 12px;
       background-color: rgba(56, 189, 248, 0.1);
-      color: var(--accent);
-      border: 1px solid var(--accent);
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
       padding: 3px 8px;
       border-radius: 12px;
     }
 
     .detail-content p {
-      color: var(--text-sub);
+      color: var(--text-secondary);
       font-size: 14px;
       line-height: 1.6;
       white-space: pre-line;
     }
 
-    .detail-content p ul { list-style: none; margin-top: 4px; }
+    .detail-content p ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 4px;
+    }
 
     .detail-content p li {
       position: relative;
@@ -419,7 +503,7 @@
 
     .detail-content p li::before {
       content: "•";
-      color: var(--accent);
+      color: var(--accent-color);
       position: absolute;
       left: 0;
       font-weight: bold;
@@ -427,24 +511,50 @@
 
     footer {
       margin-top: 40px;
-      padding: 20px;
-      border-top: 1px solid var(--border);
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
       text-align: center;
       font-size: 0.8rem;
-      color: var(--text-sub);
+      color: var(--text-secondary);
       width: calc(100% + 40px);
       margin-left: -20px;
+      margin-right: -20px;
+      padding-left: 20px;
+      padding-right: 20px;
     }
 
-    footer a { color: var(--text-sub); text-decoration: underline; }
+    footer a {
+      color: var(--text-secondary);
+      text-decoration: underline;
+    }
 
     @media (hover: hover) {
-      footer a:hover { color: var(--accent); }
+      footer a:hover {
+        color: var(--accent-color);
+      }
+    }
+
+    .info-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 3000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .info-modal.show {
+      display: flex;
     }
 
     .info-modal-content {
       background-color: var(--card-bg);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-color);
       border-radius: 12px;
       max-width: 600px;
       width: 100%;
@@ -452,45 +562,59 @@
       overflow-y: auto;
       padding: 24px;
       position: relative;
-      color: var(--text-sub);
+      color: var(--text-secondary);
       line-height: 1.6;
     }
 
     .info-modal-content h2 {
-      color: var(--accent);
+      color: var(--accent-color);
       font-size: 1.2rem;
       margin-bottom: 16px;
     }
 
     .info-modal-content h3 {
-      color: var(--text-main);
+      color: var(--text-primary);
       font-size: 1rem;
-      margin: 12px 0 4px;
+      margin-top: 12px;
+      margin-bottom: 4px;
     }
 
     .info-close-btn {
       position: absolute;
       top: 16px;
       right: 16px;
-      border: none;
-      color: var(--text-sub);
-      font-size: 1.2rem;
       background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.2rem;
       cursor: pointer;
     }
 
     @media (hover: hover) {
-      .info-close-btn:hover { color: var(--accent); }
+      .info-close-btn:hover {
+        color: var(--accent-color);
+      }
     }
 
     @media (max-width: 768px) {
-      .gallery-container { column-count: 2; }
+      .gallery-container {
+        column-count: 2;
+      }
     }
 
     @media (max-width: 480px) {
-      .gallery-container { column-count: 2; column-gap: 10px; }
-      .gallery-item { margin-bottom: 10px; }
-      .detail-media-container iframe { height: 250px; }
+      .gallery-container {
+        column-count: 2;
+        column-gap: 10px;
+      }
+      
+      .gallery-item {
+        margin-bottom: 10px;
+      }
+
+      .detail-media-container iframe {
+        height: 250px;
+      }
     }
   </style>
 </head>
@@ -499,16 +623,22 @@
   <h1>Portfolio</h1>
 
   <div class="social-icons">
-    <a href="https://www.instagram.com/coke.chok/" target="_blank" class="social-btn" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
-    <a href="https://x.com/coke_chok" target="_blank" class="social-btn" title="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
-    <a href="https://bsky.app/profile/coke-chok.bsky.social" target="_blank" class="social-btn" title="Bluesky"><i class="fa-brands fa-bluesky"></i></a>
+    <a href="https://www.instagram.com/coke.chok/" target="_blank" class="social-btn" title="Instagram">
+      <i class="fa-brands fa-instagram"></i>
+    </a>
+    <a href="https://x.com/coke_chok" target="_blank" class="social-btn" title="X (Twitter)">
+      <i class="fa-brands fa-x-twitter"></i>
+    </a>
+    <a href="https://bsky.app/profile/coke-chok.bsky.social" target="_blank" class="social-btn" title="Bluesky">
+      <i class="fa-brands fa-bluesky"></i>
+    </a>
   </div>
 
   <div class="filter-section">
     <div class="filter-menu">
-      <button class="filter-btn" data-category="image" onclick="toggleCat('image')">Visual</button>
-      <button class="filter-btn" data-category="audio" onclick="toggleCat('audio')">Audio</button>
-      <button class="filter-btn" data-category="interactive" onclick="toggleCat('interactive')">Interactive</button>
+      <button class="filter-btn" data-category="image" onclick="toggleMainCategory('image')">Visual</button>
+      <button class="filter-btn" data-category="audio" onclick="toggleMainCategory('audio')">Audio</button>
+      <button class="filter-btn" data-category="interactive" onclick="toggleMainCategory('interactive')">Interactive</button>
     </div>
 
     <div class="sub-filter-menu">
@@ -522,26 +652,26 @@
       <button class="sub-filter-btn" data-tag="webapp" onclick="toggleTag('webapp')">Web App</button>
     </div>
 
-    <button class="toggle-all-btn" id="toggleAllBtn" onclick="toggleAll()">Clear Tag</button>
+    <button class="toggle-all-btn" id="toggleAllBtn" onclick="handleToggleAll()">Clear Tag</button>
   </div>
 
   <div class="gallery-container" id="gallery"></div>
 
   <div class="btn-container">
-    <button class="btn-add" id="moreBtn" onclick="renderMore()">More</button>
+    <button class="btn-add" id="loadMoreBtn" onclick="renderMoreItems()">More</button>
   </div>
 
   <footer>
     <p>© All Rights Reserved.</p>
     <p style="margin-top: 6px;">
-      <a href="#" onclick="openInfoModal('privacyModal', event)">Privacy Policy</a> | 
-      <a href="#" onclick="openInfoModal('termsModal', event)">Terms of Service</a>
+      <a href="#" id="privacyLink">Privacy Policy</a> | 
+      <a href="#" id="termsLink">Terms of Service</a>
     </p>
   </footer>
 
-  <div class="modal" id="detailModal">
+  <div class="detail-modal-overlay" id="modalOverlay" onclick="handleModalClick(event)">
     <div class="detail-card">
-      <button class="detail-btn-close" onclick="closeDetailModal()">&times;</button>
+      <button class="detail-btn-close" onclick="closeModal()">&times;</button>
       <div class="detail-media-container" id="modalMedia"></div>
       <div class="detail-content">
         <h3 id="modalTitle"></h3>
@@ -551,9 +681,9 @@
     </div>
   </div>
 
-  <div id="privacyModal" class="modal">
+  <div id="privacyModal" class="info-modal">
     <div class="info-modal-content">
-      <button class="info-close-btn" onclick="closeInfoModal('privacyModal')">&times;</button>
+      <button class="info-close-btn">&times;</button>
       <h2>Privacy Policy</h2>
       <p>This website is created solely for the purpose of presenting a personal portfolio.</p>
       <h3>Data Collection</h3>
@@ -563,9 +693,9 @@
     </div>
   </div>
 
-  <div id="termsModal" class="modal">
+  <div id="termsModal" class="info-modal">
     <div class="info-modal-content">
-      <button class="info-close-btn" onclick="closeInfoModal('termsModal')">&times;</button>
+      <button class="info-close-btn">&times;</button>
       <h2>Terms of Service</h2>
       <h3>Copyright and Ownership</h3>
       <p>All content displayed on this website is the copyrighted property of the creator and/or the respective legal rights holders.</p>
@@ -577,16 +707,19 @@
   <script>
     const el = {
       gallery: document.getElementById('gallery'),
-      moreBtn: document.getElementById('moreBtn'),
-      detailModal: document.getElementById('detailModal'),
+      loadMoreBtn: document.getElementById('loadMoreBtn'),
+      modalOverlay: document.getElementById('modalOverlay'),
       modalMedia: document.getElementById('modalMedia'),
       modalTitle: document.getElementById('modalTitle'),
       modalTags: document.getElementById('modalTags'),
       modalDesc: document.getElementById('modalDesc'),
-      toggleAllBtn: document.getElementById('toggleAllBtn')
+      toggleAllBtn: document.getElementById('toggleAllBtn'),
+      privacyModal: document.getElementById('privacyModal'),
+      termsModal: document.getElementById('termsModal'),
+      subFilterMenu: document.querySelector('.sub-filter-menu')
     };
 
-    const CAT_MAP = {
+    const CAT_TAGS_MAP = {
       image: ['illustration', 'graphic', '2d_animate'],
       audio: ['bgm', 'song', 'dub', 'sound_edit'],
       interactive: ['webapp']
@@ -603,11 +736,10 @@
       webapp: 'Web App'
     };
 
-    const ALL_TAGS = Object.keys(TAG_LABELS);
+    const ALL_TAGS = Object.values(CAT_TAGS_MAP).flat();
     let activeTags = new Set(ALL_TAGS);
-    let pendingItems = [];
 
-    const items = [
+    const mediaList = [
       { tags: ['webapp'], type: 'webapp', title: 'Tarot Pick', link: 'https://cokechok.github.io/tarot-pick/', desc: `• สุ่มไพ่ทาโรต์\n• พัฒนาด้วย HTML, CSS, JavaScript\n• AI ที่ใช้: Gemini` },
       { tags: ['webapp'], type: 'webapp', title: 'Chord Identifier', link: 'https://cokechok.github.io/chord-identifier/', desc: `• ระบุชื่อคอร์ดแบบเรียลไทม์จากการกดโน้ต\n• รองรับการกดโน้ตด้วยเมาส์ แป้นพิมพ์ และ MIDI Controller\n• มีเสียงตามการกดโน้ต\n• พัฒนาด้วย HTML, CSS, JavaScript\n• AI ที่ใช้: Gemini` },
       { tags: ['webapp'], type: 'webapp', title: 'THB / USD / JPY Converter', link: 'https://cokechok.github.io/thb-usd-jpy-converter/', desc: `• แปลงอัตราแลกเปลี่ยน 3 สกุลเงิน\n• ใส่จำนวนเงินแค่สกุลเดียว จะแปลงสกุลที่เหลือให้\n• ใช้อัตราแลกเปลี่ยนจริงล่าสุด\n• พัฒนาด้วย HTML, CSS, JavaScript\n• AI ที่ใช้: Gemini` },
@@ -629,136 +761,245 @@
       { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L-K-Fight.png?raw=true', title: 'Fight', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
       { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L-Singing.png?raw=true', title: 'Singing', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
       { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L_M_Action.png?raw=true', title: 'Action', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
-      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L_Operator.png?raw=true', title: 'Operator', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/Obj/../Illus-L_Operator.png?raw=true', title: 'Operator', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
       { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-Natsuki.png?raw=true', title: 'Natsuki', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
-      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-Norigo.png?raw=true', title: 'Norigo', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` }
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/pointer/../Illus-Norigo.png?raw=true', title: 'Norigo', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` }
     ];
 
-    function toggleAll() {
-      const isAll = ALL_TAGS.every(t => activeTags.has(t));
-      activeTags = isAll ? new Set() : new Set(ALL_TAGS);
-      updateState();
+    let pendingItems = [];
+
+    function handleToggleAll() {
+      const isAllSelected = ALL_TAGS.every(tag => activeTags.has(tag));
+      activeTags = isAllSelected ? new Set() : new Set(ALL_TAGS);
+      updateUIState();
+      refreshGallery();
+      if (document.activeElement) document.activeElement.blur();
     }
 
-    function toggleCat(cat) {
-      const tags = CAT_MAP[cat];
-      const isAll = tags.every(t => activeTags.has(t));
-      tags.forEach(t => isAll ? activeTags.delete(t) : activeTags.add(t));
-      updateState();
+    function toggleMainCategory(category) {
+      const tags = CAT_TAGS_MAP[category];
+      const areAllSelected = tags.every(tag => activeTags.has(tag));
+      tags.forEach(tag => areAllSelected ? activeTags.delete(tag) : activeTags.add(tag));
+      updateUIState();
+      refreshGallery();
+      if (document.activeElement) document.activeElement.blur();
     }
 
     function toggleTag(tag) {
       activeTags.has(tag) ? activeTags.delete(tag) : activeTags.add(tag);
-      updateState();
+      updateUIState();
+      refreshGallery();
+      if (document.activeElement) document.activeElement.blur();
     }
 
-    function updateState() {
-      const isAll = ALL_TAGS.every(t => activeTags.has(t));
-      el.toggleAllBtn.textContent = isAll ? 'Clear Tag' : 'All Tag';
+    function updateUIState() {
+      const isAllSelected = ALL_TAGS.every(tag => activeTags.has(tag));
+      if (el.toggleAllBtn) el.toggleAllBtn.textContent = isAllSelected ? 'Clear Tag' : 'All Tag';
 
       document.querySelectorAll('.sub-filter-btn').forEach(btn => {
         btn.classList.toggle('active', activeTags.has(btn.dataset.tag));
       });
 
       document.querySelectorAll('.filter-btn[data-category]').forEach(btn => {
-        btn.classList.toggle('active', CAT_MAP[btn.dataset.category].some(t => activeTags.has(t)));
+        const tags = CAT_TAGS_MAP[btn.dataset.category];
+        btn.classList.toggle('active', tags.some(tag => activeTags.has(tag)));
       });
+    }
 
-      if (document.activeElement) document.activeElement.blur();
-      
+    function refreshGallery() {
       el.gallery.innerHTML = '';
-      pendingItems = activeTags.size === 0 ? [] : items.filter(item => item.tags.some(t => activeTags.has(t))).sort(() => Math.random() - 0.5);
-      renderMore();
+      prepareFilteredItems();
+      renderMoreItems();
     }
 
-    function formatDesc(desc) {
+    function prepareFilteredItems() {
+      if (activeTags.size === 0) {
+        pendingItems = [];
+        return;
+      }
+      const filtered = mediaList.filter(item => item.tags?.some(tag => activeTags.has(tag)));
+      pendingItems = filtered.sort(() => Math.random() - 0.5);
+    }
+
+    function formatDescription(desc) {
       if (!desc) return 'ไม่มีรายละเอียด';
-      let html = '', inList = false;
-      desc.split('\n').forEach(line => {
-        const isBullet = line.trim().startsWith('•');
-        if (isBullet && !inList) { html += '<ul>'; inList = true; }
-        if (!isBullet && inList) { html += '</ul>'; inList = false; }
-        html += isBullet ? `<li>${line.trim().substring(1).trim()}</li>` : line + '<br>';
+      const lines = desc.split('\n');
+      const formattedLines = lines.map(line => {
+        if (line.trim().startsWith('•')) {
+          return `<li>${line.trim().substring(1).trim()}</li>`;
+        }
+        return line;
       });
-      return inList ? html + '</ul>' : html;
+      
+      let result = '';
+      let inList = false;
+      
+      formattedLines.forEach(line => {
+        if (line.startsWith('<li>')) {
+          if (!inList) {
+            result += '<ul>';
+            inList = true;
+          }
+          result += line;
+        } else {
+          if (inList) {
+            result += '</ul>';
+            inList = false;
+          }
+          result += line + '<br>';
+        }
+      });
+      if (inList) result += '</ul>';
+      return result;
     }
 
-    function openDetailModal(item) {
-      el.modalMedia.innerHTML = item.type === 'youtube' 
-        ? `<iframe src="https://www.youtube.com/embed/${item.id}?autoplay=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>`
-        : item.type === 'webapp' 
-          ? `<div class="webapp-modal-preview"><a href="${item.link}" target="_blank" class="btn-visit-app">Open Web App <i class="fa-solid fa-arrow-up-right-from-square"></i></a></div>`
-          : `<img src="${item.url}">`;
+    function openModal(item) {
+      el.modalMedia.innerHTML = '';
+      if (item.type === 'youtube') {
+        const iframe = document.createElement('iframe');
+        iframe.src = `https://www.youtube.com/embed/${item.id}?autoplay=1`;
+        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+        iframe.allowFullscreen = true;
+        el.modalMedia.appendChild(iframe);
+      } else if (item.type === 'webapp') {
+        const container = document.createElement('div');
+        container.className = 'webapp-modal-preview';
+        container.innerHTML = `
+          <a href="${item.link}" target="_blank" class="btn-visit-app">
+            Open Web App <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          </a>
+        `;
+        el.modalMedia.appendChild(container);
+      } else {
+        const img = document.createElement('img');
+        img.src = item.url;
+        el.modalMedia.appendChild(img);
+      }
 
       el.modalTitle.textContent = item.title || 'ไม่มีชื่อ';
-      el.modalTags.innerHTML = item.tags.map(t => `<span class="tag-badge">${TAG_LABELS[t] || t}</span>`).join('');
-      el.modalDesc.innerHTML = formatDesc(item.desc);
-      el.detailModal.classList.add('show');
+      el.modalTags.innerHTML = '';
+
+      item.tags?.forEach(tag => {
+        const span = document.createElement('span');
+        span.className = 'tag-badge';
+        span.textContent = TAG_LABELS[tag] || tag;
+        el.modalTags.appendChild(span);
+      });
+
+      el.modalDesc.innerHTML = formatDescription(item.desc);
+      el.modalOverlay.classList.add('active');
     }
 
-    function closeDetailModal() {
-      el.detailModal.classList.remove('show');
+    function closeModal() {
+      el.modalOverlay.classList.remove('active');
       el.modalMedia.innerHTML = '';
     }
 
-    function openInfoModal(id, e) {
-      if (e) e.preventDefault();
-      document.getElementById(id).classList.add('show');
+    function handleModalClick(e) {
+      if (e.target === el.modalOverlay) closeModal();
     }
 
-    function closeInfoModal(id) {
-      document.getElementById(id).classList.remove('show');
+    function createCardElement(item) {
+      const card = document.createElement('div');
+      card.className = 'gallery-item';
+
+      if (item.type === 'youtube') {
+        card.innerHTML = `
+          <img class="youtube-thumb" loading="lazy" src="https://img.youtube.com/vi/${item.id}/hqdefault.jpg" alt="YouTube Video">
+          <div class="play-icon"></div>
+        `;
+      } else if (item.type === 'webapp') {
+        card.innerHTML = `
+          <div class="webapp-card-preview">
+            <div class="webapp-badge-text">Web App</div>
+            <div class="webapp-card-title">${item.title}</div>
+          </div>
+        `;
+      } else {
+        card.innerHTML = `<img loading="lazy" src="${item.url}" alt="Artwork">`;
+      }
+
+      card.onclick = () => openModal(item);
+      return card;
     }
 
-    function renderMore() {
-      const msg = activeTags.size === 0 ? 'Select at least one tag to display the work.' : 'No works found.';
-      if (pendingItems.length === 0 && el.gallery.children.length === 0) {
-        el.gallery.innerHTML = `<div style="column-span: all; width: 100%; text-align: center; color: var(--text-sub); padding: 50px 0;">${msg}</div>`;
-        el.moreBtn.style.display = 'none';
+    function renderMoreItems() {
+      if (activeTags.size === 0) {
+        el.gallery.innerHTML = '<div style="column-span: all; width: 100%; display: flex; justify-content: center; align-items: center; min-height: 200px; color: var(--text-secondary); text-align: center;">Select at least one tag to display the work.</div>';
+        el.loadMoreBtn.style.display = 'none';
         return;
       }
 
-      pendingItems.splice(0, 3).forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'gallery-item';
-        card.innerHTML = item.type === 'youtube'
-          ? `<img loading="lazy" src="https://img.youtube.com/vi/${item.id}/hqdefault.jpg" alt="Video"><div class="play-icon"></div>`
-          : item.type === 'webapp'
-            ? `<div class="webapp-card-preview"><div class="webapp-badge-text">Web App</div><div class="webapp-card-title">${item.title}</div></div>`
-            : `<img loading="lazy" src="${item.url}" alt="Artwork">`;
-        card.onclick = () => openDetailModal(item);
-        el.gallery.appendChild(card);
-      });
+      if (pendingItems.length === 0 && el.gallery.children.length === 0) {
+        el.gallery.innerHTML = '<div style="column-span: all; width: 100%; display: flex; justify-content: center; align-items: center; min-height: 200px; color: var(--text-secondary); text-align: center;">No works found.</div>';
+        el.loadMoreBtn.style.display = 'none';
+        return;
+      }
 
-      el.moreBtn.style.display = pendingItems.length > 0 ? 'inline-block' : 'none';
+      const itemsToRender = pendingItems.splice(0, 3);
+      itemsToRender.forEach(item => el.gallery.appendChild(createCardElement(item)));
+
+      el.loadMoreBtn.style.display = pendingItems.length > 0 ? 'inline-block' : 'none';
     }
 
-    window.onclick = (e) => {
-      if (e.target.classList.contains('modal')) {
-        e.target.classList.remove('show');
-        if (e.target === el.detailModal) el.modalMedia.innerHTML = '';
-      }
-    };
-
-    document.onkeydown = (e) => {
-      if (e.key === 'Escape') {
-        document.querySelectorAll('.modal').forEach(m => m.classList.remove('show'));
-        el.modalMedia.innerHTML = '';
-      }
-    };
-
-    const subMenu = document.querySelector('.sub-filter-menu');
-    let isDrag = false, startX, scrollLeft;
-
-    subMenu.onmousedown = (e) => { isDrag = true; startX = e.pageX - subMenu.offsetLeft; scrollLeft = subMenu.scrollLeft; };
-    subMenu.onmouseleave = subMenu.onmouseup = () => isDrag = false;
-    subMenu.onmousemove = (e) => {
-      if (!isDrag) return;
+    document.getElementById('privacyLink').addEventListener('click', (e) => {
       e.preventDefault();
-      subMenu.scrollLeft = scrollLeft - (e.pageX - subMenu.offsetLeft - startX) * 2;
-    };
+      el.privacyModal.classList.add('show');
+    });
 
-    updateState();
+    document.getElementById('termsLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      el.termsModal.classList.add('show');
+    });
+
+    document.querySelectorAll('.info-close-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        el.privacyModal.classList.remove('show');
+        el.termsModal.classList.remove('show');
+      });
+    });
+
+    window.addEventListener('click', (e) => {
+      if (e.target === el.privacyModal) el.privacyModal.classList.remove('show');
+      if (e.target === termsModal) el.termsModal.classList.remove('show'); // ปรับแก้จาก termsModal เป็น el.termsModal
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (el.modalOverlay.classList.contains('active')) closeModal();
+        el.privacyModal.classList.remove('show');
+        el.termsModal.classList.remove('show');
+      }
+    });
+
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    el.subFilterMenu.addEventListener('mousedown', (e) => {
+      isDown = true;
+      startX = e.pageX - el.subFilterMenu.offsetLeft;
+      scrollLeft = el.subFilterMenu.scrollLeft;
+    });
+
+    el.subFilterMenu.addEventListener('mouseleave', () => {
+      isDown = false;
+    });
+
+    el.subFilterMenu.addEventListener('mouseup', () => {
+      isDown = false;
+    });
+
+    el.subFilterMenu.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - el.subFilterMenu.offsetLeft;
+      const walk = (x - startX) * 2;
+      el.subFilterMenu.scrollLeft = scrollLeft - walk;
+    });
+
+    updateUIState();
+    refreshGallery();
   </script>
 
 </body>
