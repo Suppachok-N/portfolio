@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
   <style>
     :root {
       --bg-color: #000000;
@@ -30,29 +30,6 @@
       color: var(--text-primary);
       padding: 20px;
       min-height: 100vh;
-    }
-
-    .toast {
-      position: fixed;
-      top: -60px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: var(--accent-color);
-      color: var(--bg-color);
-      padding: 12px 24px;
-      border-radius: 30px;
-      font-weight: 600;
-      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
-      transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      z-index: 1000;
-      pointer-events: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .toast.show {
-      top: 20px;
     }
 
     h1 {
@@ -449,24 +426,17 @@
 </head>
 <body>
 
-  <div id="toast" class="toast">
-    <i class="fa-solid fa-check"></i> Email copied
-  </div>
-
   <h1>Coke.Chok's Portfolio</h1>
 
   <div class="social-icons">
-    <button id="emailBtn" class="social-btn" title="Email">
-      <i class="fa-regular fa-envelope"></i>
-    </button>
-    <a href="https://www.facebook.com/coke.chok/" target="_blank" class="social-btn" title="Facebook">
-      <i class="fa-brands fa-facebook-f"></i>
-    </a>
     <a href="https://www.instagram.com/coke.chok/" target="_blank" class="social-btn" title="Instagram">
       <i class="fa-brands fa-instagram"></i>
     </a>
     <a href="https://x.com/coke_chok" target="_blank" class="social-btn" title="X (Twitter)">
       <i class="fa-brands fa-x-twitter"></i>
+    </a>
+    <a href="https://bsky.app/profile/coke-chok.bsky.social" target="_blank" class="social-btn" title="Bluesky">
+      <i class="fa-brands fa-bluesky"></i>
     </a>
   </div>
 
@@ -518,17 +488,9 @@
       modalTitle: document.getElementById('modalTitle'),
       modalTags: document.getElementById('modalTags'),
       modalDesc: document.getElementById('modalDesc'),
-      toast: document.getElementById('toast'),
       toggleAllBtn: document.getElementById('toggleAllBtn')
     };
 
-    document.getElementById('emailBtn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      navigator.clipboard.writeText('suppachoknuthep@gmail.com').then(() => el.toast.classList.add('show'));
-    });
-
-    document.addEventListener('click', () => el.toast.classList.remove('show'));
-    
     const CAT_TAGS_MAP = {
       image: ['illustration', 'graphic', '2d_animate'],
       audio: ['bgm', 'song', 'dub', 'sound_edit'],
