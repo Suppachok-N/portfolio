@@ -700,13 +700,13 @@
 
     function renderMoreItems() {
       if (activeTags.size === 0) {
-        el.gallery.innerHTML = '<div style="grid-column: 1 / -1; display: flex; justify-content: center; align-items: center; width: 100%; min-height: 200px; color: var(--text-secondary); text-align: center;">Select at least one tag to display the work.</div>';
+        el.gallery.innerHTML = '<div style="column-span: all; width: 100%; display: flex; justify-content: center; align-items: center; min-height: 200px; color: var(--text-secondary); text-align: center;">Select at least one tag to display the work.</div>';
         el.loadMoreBtn.style.display = 'none';
         return;
       }
 
       if (pendingItems.length === 0 && el.gallery.children.length === 0) {
-        el.gallery.innerHTML = '<div style="grid-column: 1 / -1; display: flex; justify-content: center; align-items: center; width: 100%; min-height: 200px; color: var(--text-secondary); text-align: center;">No works found.</div>';
+        el.gallery.innerHTML = '<div style="column-span: all; width: 100%; display: flex; justify-content: center; align-items: center; min-height: 200px; color: var(--text-secondary); text-align: center;">No works found.</div>';
         el.loadMoreBtn.style.display = 'none';
         return;
       }
