@@ -402,6 +402,104 @@
       white-space: pre-line;
     }
 
+    .detail-content p ul {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 4px;
+    }
+
+    .detail-content p li {
+      position: relative;
+      padding-left: 18px;
+      margin-bottom: 4px;
+    }
+
+    .detail-content p li::before {
+      content: "•";
+      color: var(--accent-color);
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
+
+    footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    footer a {
+      color: var(--text-secondary);
+      text-decoration: underline;
+    }
+
+    footer a:hover {
+      color: var(--accent-color);
+    }
+
+    .info-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      z-index: 3000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .info-modal.show {
+      display: flex;
+    }
+
+    .info-modal-content {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      padding: 24px;
+      position: relative;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .info-modal-content h2 {
+      color: var(--accent-color);
+      font-size: 1.2rem;
+      margin-bottom: 16px;
+    }
+
+    .info-modal-content h3 {
+      color: var(--text-primary);
+      font-size: 1rem;
+      margin-top: 12px;
+      margin-bottom: 4px;
+    }
+
+    .info-close-btn {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .info-close-btn:hover {
+      color: var(--accent-color);
+    }
+
     @media (max-width: 768px) {
       .gallery-container {
         column-count: 2;
@@ -467,6 +565,14 @@
     <button class="btn-add" id="loadMoreBtn" onclick="renderMoreItems()">More</button>
   </div>
 
+  <footer>
+    <p>© All Rights Reserved.</p>
+    <p style="margin-top: 6px;">
+      <a href="#" id="privacyLink">Privacy Policy</a> | 
+      <a href="#" id="termsLink">Terms of Service</a>
+    </p>
+  </footer>
+
   <div class="detail-modal-overlay" id="modalOverlay" onclick="handleModalClick(event)">
     <div class="detail-card">
       <button class="detail-btn-close" onclick="closeModal()">&times;</button>
@@ -476,6 +582,29 @@
         <div class="detail-tags" id="modalTags"></div>
         <p id="modalDesc"></p>
       </div>
+    </div>
+  </div>
+
+  <div id="privacyModal" class="info-modal">
+    <div class="info-modal-content">
+      <button class="info-close-btn">&times;</button>
+      <h2>Privacy Policy</h2>
+      <p>This website is created solely for the purpose of presenting a personal portfolio.</p>
+      <h3>Data Collection</h3>
+      <p>This website does not collect or store any personal data of visitors.</p>
+      <h3>Cookies</h3>
+      <p>Basic cookies from third-party services (such as Google Fonts or Font Awesome) may be used solely for website rendering and display purposes.</p>
+    </div>
+  </div>
+
+  <div id="termsModal" class="info-modal">
+    <div class="info-modal-content">
+      <button class="info-close-btn">&times;</button>
+      <h2>Terms of Service</h2>
+      <h3>Copyright and Ownership</h3>
+      <p>All content displayed on this website is the copyrighted property of the creator and/or the respective legal rights holders.</p>
+      <h3>Prohibitions</h3>
+      <p>Modification, reproduction, commercial use, or use for AI model training without prior written permission is strictly prohibited.</p>
     </div>
   </div>
 
@@ -530,7 +659,7 @@
       { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-Base.png?raw=true', title: 'Outer base', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
       { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L-Captain.png?raw=true', title: 'Captain', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
       { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L-F-Operation.png?raw=true', title: 'Operation', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
-      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L-K-Fight.png?raw=true', title: 'Fight', desc: `ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
+      { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L-K-Fight.png?raw=true', title: 'Fight', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
       { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L-Singing.png?raw=true', title: 'Singing', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
       { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L_M_Action.png?raw=true', title: 'Action', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
       { tags: ['illustration'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Illus-L_Operator.png?raw=true', title: 'Operator', desc: `• ซอฟต์แวร์ที่ใช้: Clip Studio Paint\n• ไม่ใช้ AI` },
@@ -590,6 +719,38 @@
       pendingItems = filtered.sort(() => Math.random() - 0.5);
     }
 
+    function formatDescription(desc) {
+      if (!desc) return 'ไม่มีรายละเอียด';
+      const lines = desc.split('\n');
+      const formattedLines = lines.map(line => {
+        if (line.trim().startsWith('•')) {
+          return `<li>${line.trim().substring(1).trim()}</li>`;
+        }
+        return line;
+      });
+      
+      let result = '';
+      let inList = false;
+      
+      formattedLines.forEach(line => {
+        if (line.startsWith('<li>')) {
+          if (!inList) {
+            result += '<ul>';
+            inList = true;
+          }
+          result += line;
+        } else {
+          if (inList) {
+            result += '</ul>';
+            inList = false;
+          }
+          result += line + '<br>';
+        }
+      });
+      if (inList) result += '</ul>';
+      return result;
+    }
+
     function openModal(item) {
       el.modalMedia.innerHTML = '';
       if (item.type === 'youtube') {
@@ -623,7 +784,7 @@
         el.modalTags.appendChild(span);
       });
 
-      el.modalDesc.textContent = item.desc || 'ไม่มีรายละเอียด';
+      el.modalDesc.innerHTML = formatDescription(item.desc);
       el.modalOverlay.classList.add('active');
     }
 
@@ -679,8 +840,37 @@
       el.loadMoreBtn.style.display = pendingItems.length > 0 ? 'inline-block' : 'none';
     }
 
+    const privacyModal = document.getElementById('privacyModal');
+    const termsModal = document.getElementById('termsModal');
+
+    document.getElementById('privacyLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      privacyModal.classList.add('show');
+    });
+
+    document.getElementById('termsLink').addEventListener('click', (e) => {
+      e.preventDefault();
+      termsModal.classList.add('show');
+    });
+
+    document.querySelectorAll('.info-close-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        privacyModal.classList.remove('show');
+        termsModal.classList.remove('show');
+      });
+    });
+
+    window.addEventListener('click', (e) => {
+      if (e.target === privacyModal) privacyModal.classList.remove('show');
+      if (e.target === termsModal) termsModal.classList.remove('show');
+    });
+
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && el.modalOverlay.classList.contains('active')) closeModal();
+      if (e.key === 'Escape') {
+        if (el.modalOverlay.classList.contains('active')) closeModal();
+        privacyModal.classList.remove('show');
+        termsModal.classList.remove('show');
+      }
     });
 
     updateUIState();
