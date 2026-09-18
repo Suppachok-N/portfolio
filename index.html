@@ -61,9 +61,11 @@
       text-decoration: none;
     }
 
-    .social-btn:hover {
-      background-color: var(--accent-color);
-      color: var(--bg-color);
+    @media (hover: hover) {
+      .social-btn:hover {
+        background-color: var(--accent-color);
+        color: var(--bg-color);
+      }
     }
 
     .filter-section {
@@ -100,10 +102,18 @@
       transition: all 0.2s ease;
     }
 
-    .filter-btn:hover, .filter-btn.active {
+    .filter-btn.active {
       background-color: var(--accent-color);
       color: var(--bg-color);
       border-color: var(--accent-color);
+    }
+
+    @media (hover: hover) {
+      .filter-btn:hover {
+        background-color: var(--accent-color);
+        color: var(--bg-color);
+        border-color: var(--accent-color);
+      }
     }
 
     .sub-filter-btn {
@@ -118,10 +128,18 @@
       transition: all 0.2s ease;
     }
 
-    .sub-filter-btn:hover, .sub-filter-btn.active {
+    .sub-filter-btn.active {
       background-color: rgba(56, 189, 248, 0.1);
       color: var(--accent-color);
       border-color: var(--accent-color);
+    }
+
+    @media (hover: hover) {
+      .sub-filter-btn:hover {
+        background-color: rgba(56, 189, 248, 0.1);
+        color: var(--accent-color);
+        border-color: var(--accent-color);
+      }
     }
 
     .toggle-all-btn {
@@ -137,11 +155,13 @@
       opacity: 0.8;
     }
 
-    .toggle-all-btn:hover {
-      opacity: 1;
-      color: var(--accent-color);
-      border-color: var(--accent-color);
-      background-color: rgba(56, 189, 248, 0.05);
+    @media (hover: hover) {
+      .toggle-all-btn:hover {
+        opacity: 1;
+        color: var(--accent-color);
+        border-color: var(--accent-color);
+        background-color: rgba(56, 189, 248, 0.05);
+      }
     }
 
     .gallery-container {
@@ -170,8 +190,10 @@
       transition: transform 0.3s ease;
     }
 
-    .gallery-item:hover img {
-      transform: scale(1.03);
+    @media (hover: hover) {
+      .gallery-item:hover img {
+        transform: scale(1.03);
+      }
     }
 
     .play-icon {
@@ -248,10 +270,12 @@
       transition: all 0.2s ease;
     }
 
-    .btn-add:hover {
-      background-color: var(--accent-color);
-      color: var(--bg-color);
-      transform: translateY(-2px);
+    @media (hover: hover) {
+      .btn-add:hover {
+        background-color: var(--accent-color);
+        color: var(--bg-color);
+        transform: translateY(-2px);
+      }
     }
 
     .detail-modal-overlay {
@@ -311,9 +335,11 @@
       transition: all 0.2s;
     }
 
-    .detail-btn-close:hover {
-      background-color: var(--accent-color);
-      color: var(--bg-color);
+    @media (hover: hover) {
+      .detail-btn-close:hover {
+        background-color: var(--accent-color);
+        color: var(--bg-color);
+      }
     }
 
     .detail-media-container {
@@ -365,9 +391,11 @@
       transition: all 0.2s ease;
     }
 
-    .btn-visit-app:hover {
-      opacity: 0.9;
-      transform: translateY(-2px);
+    @media (hover: hover) {
+      .btn-visit-app:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+      }
     }
 
     .detail-content {
@@ -436,8 +464,10 @@
       text-decoration: underline;
     }
 
-    footer a:hover {
-      color: var(--accent-color);
+    @media (hover: hover) {
+      footer a:hover {
+        color: var(--accent-color);
+      }
     }
 
     .info-modal {
@@ -496,8 +526,10 @@
       cursor: pointer;
     }
 
-    .info-close-btn:hover {
-      color: var(--accent-color);
+    @media (hover: hover) {
+      .info-close-btn:hover {
+        color: var(--accent-color);
+      }
     }
 
     @media (max-width: 768px) {
@@ -669,29 +701,29 @@
 
     let pendingItems = [];
 
-function handleToggleAll() {
-  const isAllSelected = ALL_TAGS.every(tag => activeTags.has(tag));
-  activeTags = isAllSelected ? new Set() : new Set(ALL_TAGS);
-  updateUIState();
-  refreshGallery();
-  if (document.activeElement) document.activeElement.blur();
-}
+    function handleToggleAll() {
+      const isAllSelected = ALL_TAGS.every(tag => activeTags.has(tag));
+      activeTags = isAllSelected ? new Set() : new Set(ALL_TAGS);
+      updateUIState();
+      refreshGallery();
+      if (document.activeElement) document.activeElement.blur();
+    }
 
-function toggleMainCategory(category) {
-  const tags = CAT_TAGS_MAP[category];
-  const areAllSelected = tags.every(tag => activeTags.has(tag));
-  tags.forEach(tag => areAllSelected ? activeTags.delete(tag) : activeTags.add(tag));
-  updateUIState();
-  refreshGallery();
-  if (document.activeElement) document.activeElement.blur();
-}
+    function toggleMainCategory(category) {
+      const tags = CAT_TAGS_MAP[category];
+      const areAllSelected = tags.every(tag => activeTags.has(tag));
+      tags.forEach(tag => areAllSelected ? activeTags.delete(tag) : activeTags.add(tag));
+      updateUIState();
+      refreshGallery();
+      if (document.activeElement) document.activeElement.blur();
+    }
 
-function toggleTag(tag) {
-  activeTags.has(tag) ? activeTags.delete(tag) : activeTags.add(tag);
-  updateUIState();
-  refreshGallery();
-  if (document.activeElement) document.activeElement.blur();
-}
+    function toggleTag(tag) {
+      activeTags.has(tag) ? activeTags.delete(tag) : activeTags.add(tag);
+      updateUIState();
+      refreshGallery();
+      if (document.activeElement) document.activeElement.blur();
+    }
 
     function updateUIState() {
       const isAllSelected = ALL_TAGS.every(tag => activeTags.has(tag));
