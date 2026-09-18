@@ -669,26 +669,29 @@
 
     let pendingItems = [];
 
-    function handleToggleAll() {
-      const isAllSelected = ALL_TAGS.every(tag => activeTags.has(tag));
-      activeTags = isAllSelected ? new Set() : new Set(ALL_TAGS);
-      updateUIState();
-      refreshGallery();
-    }
+function handleToggleAll() {
+  const isAllSelected = ALL_TAGS.every(tag => activeTags.has(tag));
+  activeTags = isAllSelected ? new Set() : new Set(ALL_TAGS);
+  updateUIState();
+  refreshGallery();
+  if (document.activeElement) document.activeElement.blur();
+}
 
-    function toggleMainCategory(category) {
-      const tags = CAT_TAGS_MAP[category];
-      const areAllSelected = tags.every(tag => activeTags.has(tag));
-      tags.forEach(tag => areAllSelected ? activeTags.delete(tag) : activeTags.add(tag));
-      updateUIState();
-      refreshGallery();
-    }
+function toggleMainCategory(category) {
+  const tags = CAT_TAGS_MAP[category];
+  const areAllSelected = tags.every(tag => activeTags.has(tag));
+  tags.forEach(tag => areAllSelected ? activeTags.delete(tag) : activeTags.add(tag));
+  updateUIState();
+  refreshGallery();
+  if (document.activeElement) document.activeElement.blur();
+}
 
-    function toggleTag(tag) {
-      activeTags.has(tag) ? activeTags.delete(tag) : activeTags.add(tag);
-      updateUIState();
-      refreshGallery();
-    }
+function toggleTag(tag) {
+  activeTags.has(tag) ? activeTags.delete(tag) : activeTags.add(tag);
+  updateUIState();
+  refreshGallery();
+  if (document.activeElement) document.activeElement.blur();
+}
 
     function updateUIState() {
       const isAllSelected = ALL_TAGS.every(tag => activeTags.has(tag));
