@@ -105,15 +105,10 @@
     }
 
     .sub-filter-menu {
-      display: none;
       padding: 8px 16px;
       background-color: rgba(255, 255, 255, 0.02);
       border: 1px solid var(--border-color);
       border-radius: 25px;
-    }
-
-    .sub-filter-menu.active {
-      display: flex;
     }
 
     .filter-btn {
@@ -150,6 +145,26 @@
       background-color: rgba(56, 189, 248, 0.1);
       color: var(--accent-color);
       border-color: var(--accent-color);
+    }
+
+    .toggle-all-btn {
+      padding: 4px 12px;
+      font-size: 11px;
+      font-weight: 500;
+      background-color: transparent;
+      color: var(--text-secondary);
+      border: 1px dashed var(--text-secondary);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      opacity: 0.8;
+    }
+
+    .toggle-all-btn:hover {
+      opacity: 1;
+      color: var(--accent-color);
+      border-color: var(--accent-color);
+      background-color: rgba(56, 189, 248, 0.05);
     }
 
     .gallery-container {
@@ -457,18 +472,23 @@
 
   <div class="filter-section">
     <div class="filter-menu">
-      <button class="filter-btn active" onclick="setMainFilter('all', this)">All</button>
-      <button class="filter-btn" onclick="setMainFilter('image', this)">Visual</button>
-      <button class="filter-btn" onclick="setMainFilter('audio', this)">Audio</button>
-      <button class="filter-btn" onclick="setMainFilter('webapp', this)">Web App</button>
+      <button class="filter-btn" data-category="image" onclick="toggleMainCategory('image')">Visual</button>
+      <button class="filter-btn" data-category="audio" onclick="toggleMainCategory('audio')">Audio</button>
+      <button class="filter-btn" data-category="interactive" onclick="toggleMainCategory('interactive')">Interactive</button>
     </div>
 
-    <div class="sub-filter-menu" id="subFilterContainer">
-      <button class="sub-filter-btn active" onclick="setSubFilter('all_image', this)">All Visual</button>
-      <button class="sub-filter-btn" onclick="setSubFilter('illustration', this)">Illustration</button>
-      <button class="sub-filter-btn" onclick="setSubFilter('graphic', this)">Graphic</button>
-      <button class="sub-filter-btn" onclick="setSubFilter('2d_animate', this)">2D Animate</button>
+    <div class="sub-filter-menu">
+      <button class="sub-filter-btn" data-tag="illustration" onclick="toggleTag('illustration')">Illustration</button>
+      <button class="sub-filter-btn" data-tag="graphic" onclick="toggleTag('graphic')">Graphic</button>
+      <button class="sub-filter-btn" data-tag="2d_animate" onclick="toggleTag('2d_animate')">2D Animate</button>
+      <button class="sub-filter-btn" data-tag="bgm" onclick="toggleTag('bgm')">BGM</button>
+      <button class="sub-filter-btn" data-tag="song" onclick="toggleTag('song')">Song</button>
+      <button class="sub-filter-btn" data-tag="dub" onclick="toggleTag('dub')">Dub</button>
+      <button class="sub-filter-btn" data-tag="sound_edit" onclick="toggleTag('sound_edit')">Sound Edit</button>
+      <button class="sub-filter-btn" data-tag="webapp" onclick="toggleTag('webapp')">Web App</button>
     </div>
+
+    <button class="toggle-all-btn" id="toggleAllBtn" onclick="handleToggleAll()">Clear Tag</button>
   </div>
 
   <div class="gallery-container" id="gallery"></div>
@@ -490,34 +510,53 @@
   </div>
 
   <script>
-    const gallery = document.getElementById('gallery');
-    const loadMoreBtn = document.getElementById('loadMoreBtn');
-    const modalOverlay = document.getElementById('modalOverlay');
-    const modalMedia = document.getElementById('modalMedia');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalTags = document.getElementById('modalTags');
-    const modalDesc = document.getElementById('modalDesc');
-    const subFilterContainer = document.getElementById('subFilterContainer');
-    const toast = document.getElementById('toast');
+    const el = {
+      gallery: document.getElementById('gallery'),
+      loadMoreBtn: document.getElementById('loadMoreBtn'),
+      modalOverlay: document.getElementById('modalOverlay'),
+      modalMedia: document.getElementById('modalMedia'),
+      modalTitle: document.getElementById('modalTitle'),
+      modalTags: document.getElementById('modalTags'),
+      modalDesc: document.getElementById('modalDesc'),
+      toast: document.getElementById('toast'),
+      toggleAllBtn: document.getElementById('toggleAllBtn')
+    };
 
     document.getElementById('emailBtn').addEventListener('click', (e) => {
       e.stopPropagation();
-      navigator.clipboard.writeText('suppachoknuthep@gmail.com').then(() => toast.classList.add('show'));
+      navigator.clipboard.writeText('suppachoknuthep@gmail.com').then(() => el.toast.classList.add('show'));
     });
 
-    document.addEventListener('click', () => toast.classList.remove('show'));
+    document.addEventListener('click', () => el.toast.classList.remove('show'));
     
-    let activeMainCategory = 'all';
-    let activeSubCategory = 'all_image';
+    const CAT_TAGS_MAP = {
+      image: ['illustration', 'graphic', '2d_animate'],
+      audio: ['bgm', 'song', 'dub', 'sound_edit'],
+      interactive: ['webapp']
+    };
+
+    const TAG_LABELS = { 
+      illustration: 'Illustration', 
+      graphic: 'Graphic', 
+      '2d_animate': '2D Animate', 
+      bgm: 'BGM',
+      song: 'Song',
+      dub: 'Dub',
+      sound_edit: 'Sound Edit',
+      webapp: 'Web App'
+    };
+
+    const ALL_TAGS = Object.values(CAT_TAGS_MAP).flat();
+    let activeTags = new Set(ALL_TAGS);
 
     const mediaList = [
       { tags: ['webapp'], type: 'webapp', title: 'Tarot Pick', link: 'https://cokechok.github.io/tarot-pick/', desc: `• สุ่มไพ่ทาโรต์\n• พัฒนาด้วย HTML, CSS, JavaScript\n• AI ที่ใช้: Gemini` },
       { tags: ['webapp'], type: 'webapp', title: 'Chord Identifier', link: 'https://cokechok.github.io/chord-identifier/', desc: `• ระบุชื่อคอร์ดแบบเรียลไทม์จากการกดโน้ต\n• รองรับการกดโน้ตด้วยเมาส์ แป้นพิมพ์ และ MIDI Controller\n• มีเสียงตามการกดโน้ต\n• พัฒนาด้วย HTML, CSS, JavaScript\n• AI ที่ใช้: Gemini` },
       { tags: ['webapp'], type: 'webapp', title: 'THB / USD / JPY Converter', link: 'https://cokechok.github.io/thb-usd-jpy-converter/', desc: `• แปลงอัตราแลกเปลี่ยน 3 สกุลเงิน\n• ใส่จำนวนเงินแค่สกุลเดียว จะแปลงสกุลที่เหลือให้\n• ใช้อัตราแลกเปลี่ยนจริงล่าสุด\n• พัฒนาด้วย HTML, CSS, JavaScript\n• AI ที่ใช้: Gemini` },
       { tags: ['webapp'], type: 'webapp', title: 'Binaural Beats Generator', link: 'https://cokechok.github.io/binaural-beats/', desc: `• สร้างเสียง Binaural Beats สำหรับการทำสมาธิและการพักผ่อน\n• พัฒนาด้วย Web Audio API, HTML, CSS, JavaScript\n• AI ที่ใช้: Gemini` },
-      { tags: ['audio'], type: 'youtube', id: 'prE-CU5Ruqs', title: 'GOPGAP', desc: `• จบงานเป็น .wav ไฟล์เดียวที่เอาไปรวมกับงานภาพได้เลย\n• BGM ทำเองทั้งหมด\n• เฉพาะเสียง FX, Foley, บรรยากาศ ที่ส่วนใหญ่โหลดจาก 3rd Party\n• ซอฟต์แวร์ที่ใช้: Ableton Live\n• ไม่ใช้ AI` },
-      { tags: ['audio'], type: 'youtube', id: '6YZIQ8rhybQ', title: 'A Daily Disaster', desc: `• จบงานเป็น .wav ไฟล์เดียวที่เอาไปรวมกับงานภาพได้เลย\n• BGM ทำเองทั้งหมด\n• เฉพาะเสียง FX, Foley, บรรยากาศ ที่ส่วนใหญ่โหลดจาก 3rd Party\n• กำกับพากย์เอง\n• ซอฟต์แวร์ที่ใช้: Ableton Live\n• ไม่ใช้ AI` },
-      { tags: ['audio'], type: 'youtube', id: '2MLnYi3CVW4', title: 'A Daily Disaster', desc: `• จบงานเป็น .wav ไฟล์เดียวที่เอาไปรวมกับงานภาพได้เลย\n• BGM ทำเองทั้งหมด\n• เฉพาะเสียง FX, Foley, บรรยากาศ ที่ส่วนใหญ่โหลดจาก 3rd Party\n• กำกับพากย์เอง\n• ซอฟต์แวร์ที่ใช้: Ableton Live\n• ไม่ใช้ AI` },
+      { tags: ['bgm', 'dub', 'sound_edit'], type: 'youtube', id: 'prE-CU5Ruqs', title: 'GOPGAP', desc: `• จบงานเป็น .wav ไฟล์เดียวที่เอาไปรวมกับงานภาพได้เลย\n• BGM ทำเองทั้งหมด\n• เฉพาะเสียง FX, Foley, บรรยากาศ ที่ส่วนใหญ่โหลดจาก 3rd Party\n• ซอฟต์แวร์ที่ใช้: Ableton Live\n• ไม่ใช้ AI` },
+      { tags: ['bgm', 'dub', 'sound_edit'], type: 'youtube', id: '6YZIQ8rhybQ', title: 'A Daily Disaster', desc: `• จบงานเป็น .wav ไฟล์เดียวที่เอาไปรวมกับงานภาพได้เลย\n• BGM ทำเองทั้งหมด\n• เฉพาะเสียง FX, Foley, บรรยากาศ ที่ส่วนใหญ่โหลดจาก 3rd Party\n• กำกับพากย์เอง\n• ซอฟต์แวร์ที่ใช้: Ableton Live\n• ไม่ใช้ AI` },
+      { tags: ['bgm', 'dub', 'sound_edit'], type: 'youtube', id: '2MLnYi3CVW4', title: 'A Daily Disaster', desc: `• จบงานเป็น .wav ไฟล์เดียวที่เอาไปรวมกับงานภาพได้เลย\n• BGM ทำเองทั้งหมด\n• เฉพาะเสียง FX, Foley, บรรยากาศ ที่ส่วนใหญ่โหลดจาก 3rd Party\n• กำกับพากย์เอง\n• ซอฟต์แวร์ที่ใช้: Ableton Live\n• ไม่ใช้ AI` },
       { tags: ['2d_animate'], type: 'youtube', id: '3WiSuG1dFGw', title: 'ส่วนหนึ่งของ Interrogator', desc: `• งานตำแหน่ง 2D Animator ที่ M2 Animation Studio Co., Ltd.\n• ส่วนที่ทำ: การเคลื่อนไหวของตัวละคร\n• ซอฟต์แวร์ที่ใช้: Toon Boom Harmony\n• ไม่ใช้ AI` },
       { tags: ['2d_animate'], type: 'youtube', id: 'x7kNhP0kfys', title: 'ส่วนหนึ่งของ ちみも (Chimimo)', desc: `• งานตำแหน่ง 2D Animator ที่ M2 Animation Studio Co., Ltd.\n• ส่วนที่ทำ: การเคลื่อนไหวของตัวละคร\n• ซอฟต์แวร์ที่ใช้: Toon Boom Harmony\n• ไม่ใช้ AI` },
       { tags: ['2d_animate'], type: 'image', url: 'https://github.com/Suppachok-N/portfolio/blob/main/Anim-Gunfight.gif?raw=true', title: 'Gunfight', desc: `• ซอฟต์แวร์ที่ใช้: Toon Boom Harmony\n• ไม่ใช้ AI` },
@@ -539,76 +578,64 @@
 
     let pendingItems = [];
 
-    function shuffleArray(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-      return array;
-    }
-
-    function setMainFilter(category, btnElement) {
-      activeMainCategory = category;
-      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-      btnElement.classList.add('active');
-
-      if (category === 'image') {
-        subFilterContainer.classList.add('active');
-        activeSubCategory = 'all_image';
-        resetSubFilterButtons();
-      } else {
-        subFilterContainer.classList.remove('active');
-      }
-
+    function handleToggleAll() {
+      const isAllSelected = ALL_TAGS.every(tag => activeTags.has(tag));
+      activeTags = isAllSelected ? new Set() : new Set(ALL_TAGS);
+      updateUIState();
       refreshGallery();
     }
 
-    function setSubFilter(subCategory, btnElement) {
-      activeSubCategory = subCategory;
-      document.querySelectorAll('.sub-filter-btn').forEach(btn => btn.classList.remove('active'));
-      btnElement.classList.add('active');
-
+    function toggleMainCategory(category) {
+      const tags = CAT_TAGS_MAP[category];
+      const areAllSelected = tags.every(tag => activeTags.has(tag));
+      tags.forEach(tag => areAllSelected ? activeTags.delete(tag) : activeTags.add(tag));
+      updateUIState();
       refreshGallery();
     }
 
-    function resetSubFilterButtons() {
-      const subBtns = document.querySelectorAll('.sub-filter-btn');
-      subBtns.forEach((btn, idx) => btn.classList.toggle('active', idx === 0));
+    function toggleTag(tag) {
+      activeTags.has(tag) ? activeTags.delete(tag) : activeTags.add(tag);
+      updateUIState();
+      refreshGallery();
+    }
+
+    function updateUIState() {
+      const isAllSelected = ALL_TAGS.every(tag => activeTags.has(tag));
+      if (el.toggleAllBtn) el.toggleAllBtn.textContent = isAllSelected ? 'Clear Tag' : 'All Tag';
+
+      document.querySelectorAll('.sub-filter-btn').forEach(btn => {
+        btn.classList.toggle('active', activeTags.has(btn.dataset.tag));
+      });
+
+      document.querySelectorAll('.filter-btn[data-category]').forEach(btn => {
+        const tags = CAT_TAGS_MAP[btn.dataset.category];
+        btn.classList.toggle('active', tags.some(tag => activeTags.has(tag)));
+      });
     }
 
     function refreshGallery() {
-      gallery.innerHTML = '';
+      el.gallery.innerHTML = '';
       prepareFilteredItems();
       renderMoreItems();
     }
 
     function prepareFilteredItems() {
-      let filtered = [];
-
-      if (activeMainCategory === 'all') {
-        filtered = mediaList;
-      } else if (activeMainCategory === 'image') {
-        const visualTags = ['illustration', 'graphic', '2d_animate'];
-        filtered = mediaList.filter(item => 
-          activeSubCategory === 'all_image' 
-            ? item.tags?.some(tag => visualTags.includes(tag))
-            : item.tags?.includes(activeSubCategory)
-        );
-      } else {
-        filtered = mediaList.filter(item => item.tags?.includes(activeMainCategory));
+      if (activeTags.size === 0) {
+        pendingItems = [];
+        return;
       }
-      
-      pendingItems = shuffleArray([...filtered]);
+      const filtered = mediaList.filter(item => item.tags?.some(tag => activeTags.has(tag)));
+      pendingItems = filtered.sort(() => Math.random() - 0.5);
     }
 
     function openModal(item) {
-      modalMedia.innerHTML = '';
+      el.modalMedia.innerHTML = '';
       if (item.type === 'youtube') {
         const iframe = document.createElement('iframe');
         iframe.src = `https://www.youtube.com/embed/${item.id}?autoplay=1`;
         iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
         iframe.allowFullscreen = true;
-        modalMedia.appendChild(iframe);
+        el.modalMedia.appendChild(iframe);
       } else if (item.type === 'webapp') {
         const container = document.createElement('div');
         container.className = 'webapp-modal-preview';
@@ -617,42 +644,34 @@
             Open Web App <i class="fa-solid fa-arrow-up-right-from-square"></i>
           </a>
         `;
-        modalMedia.appendChild(container);
+        el.modalMedia.appendChild(container);
       } else {
         const img = document.createElement('img');
         img.src = item.url;
-        modalMedia.appendChild(img);
+        el.modalMedia.appendChild(img);
       }
 
-      modalTitle.textContent = item.title || 'ไม่มีชื่อ';
-      modalTags.innerHTML = '';
-      
-      const tagMap = { 
-        illustration: 'Illustration', 
-        graphic: 'Graphic', 
-        '2d_animate': '2D Animate', 
-        audio: 'Audio',
-        webapp: 'Web App'
-      };
+      el.modalTitle.textContent = item.title || 'ไม่มีชื่อ';
+      el.modalTags.innerHTML = '';
 
       item.tags?.forEach(tag => {
         const span = document.createElement('span');
         span.className = 'tag-badge';
-        span.textContent = tagMap[tag] || tag;
-        modalTags.appendChild(span);
+        span.textContent = TAG_LABELS[tag] || tag;
+        el.modalTags.appendChild(span);
       });
 
-      modalDesc.textContent = item.desc || 'ไม่มีรายละเอียด';
-      modalOverlay.classList.add('active');
+      el.modalDesc.textContent = item.desc || 'ไม่มีรายละเอียด';
+      el.modalOverlay.classList.add('active');
     }
 
     function closeModal() {
-      modalOverlay.classList.remove('active');
-      modalMedia.innerHTML = '';
+      el.modalOverlay.classList.remove('active');
+      el.modalMedia.innerHTML = '';
     }
 
     function handleModalClick(e) {
-      if (e.target === modalOverlay) closeModal();
+      if (e.target === el.modalOverlay) closeModal();
     }
 
     function createCardElement(item) {
@@ -680,25 +699,30 @@
     }
 
     function renderMoreItems() {
-      if (pendingItems.length === 0) {
-        loadMoreBtn.style.display = 'none';
+      if (activeTags.size === 0) {
+        el.gallery.innerHTML = '<div style="grid-column: 1 / -1; display: flex; justify-content: center; align-items: center; width: 100%; min-height: 200px; color: var(--text-secondary); text-align: center;">Select at least one tag to display the work.</div>';
+        el.loadMoreBtn.style.display = 'none';
+        return;
+      }
+
+      if (pendingItems.length === 0 && el.gallery.children.length === 0) {
+        el.gallery.innerHTML = '<div style="grid-column: 1 / -1; display: flex; justify-content: center; align-items: center; width: 100%; min-height: 200px; color: var(--text-secondary); text-align: center;">No works found.</div>';
+        el.loadMoreBtn.style.display = 'none';
         return;
       }
 
       const itemsToRender = pendingItems.splice(0, 3);
-      itemsToRender.forEach(item => gallery.appendChild(createCardElement(item)));
+      itemsToRender.forEach(item => el.gallery.appendChild(createCardElement(item)));
 
-      loadMoreBtn.style.display = pendingItems.length > 0 ? 'inline-block' : 'none';
+      el.loadMoreBtn.style.display = pendingItems.length > 0 ? 'inline-block' : 'none';
     }
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
-        closeModal();
-      }
+      if (e.key === 'Escape' && el.modalOverlay.classList.contains('active')) closeModal();
     });
 
-    prepareFilteredItems();
-    renderMoreItems();
+    updateUIState();
+    refreshGallery();
   </script>
 
 </body>
